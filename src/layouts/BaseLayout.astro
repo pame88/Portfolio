@@ -1,0 +1,44 @@
+---
+import "../styles/global.css";
+import SiteHeader from "../components/layout/SiteHeader.astro";
+import SiteFooter from "../components/layout/SiteFooter.astro";
+import socialImage from "../assets/placeholder-preview.png";
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+}
+const { title, description, image = socialImage.src } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const social = new URL(image, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} | Portfolio</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={social} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={social} />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">
+      Skip to content
+    </a>
+    <SiteHeader />
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

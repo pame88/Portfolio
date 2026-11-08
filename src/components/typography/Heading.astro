@@ -1,0 +1,11 @@
+---
+interface Props {
+  as?: "h1" | "h2" | "h3" | "h4";
+  variant?: "display" | "xl" | "l" | "m" | "s";
+}
+const { as: Tag = "h2", variant = "l" } = Astro.props;
+---
+
+<Tag class={variant === "display" ? "type-display" : `type-heading-${variant}`}>
+  <slot />
+</Tag>

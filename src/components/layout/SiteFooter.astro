@@ -1,0 +1,27 @@
+---
+import PageContainer from "./PageContainer.astro";
+import { sitePath } from "../../utils/routing";
+---
+
+<footer class="site-footer">
+  <PageContainer>
+    <div class="footer-content type-caption">
+      <p>Portfolio foundation. All sample projects are placeholders.</p>
+      <a href={sitePath("/about/")}>About this portfolio</a>
+    </div>
+  </PageContainer>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: var(--border-rule);
+    color: var(--color-secondary);
+  }
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    padding-block: var(--space-8);
+  }
+</style>

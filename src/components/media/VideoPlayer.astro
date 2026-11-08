@@ -1,0 +1,135 @@
+---
+import type { ImageMetadata } from "astro";
+import { sitePath } from "../../utils/routing";
+interface Props {
+  src: string;
+  poster: ImageMetadata;
+  label: string;
+  captions?: string;
+  transcript?: string;
+  language?: string;
+  decorative?: boolean;
+}
+const {
+  src,
+  poster,
+  label,
+  captions,
+  transcript,
+  language = "en",
+  decorative = false,
+} = Astro.props;
+---
+
+<portfolio-video data-decorative={decorative ? "" : undefined}>
+  <figure>
+    <video
+      src={sitePath(src)}
+      poster={poster.src}
+      width={poster.width}
+      height={poster.height}
+      controls={!decorative}
+      muted={decorative}
+      loop={decorative}
+      playsinline
+      crossorigin={captions ? "anonymous" : undefined}
+      preload={decorative ? "none" : "metadata"}
+      aria-label={decorative ? undefined : label}
+      aria-hidden={decorative ? "true" : undefined}
+    >
+      {captions && (
+        <track
+          kind="captions"
+          src={sitePath(captions)}
+          srclang={language}
+          label="Captions"
+          default
+        />
+      )}
+      <p>
+        Your browser cannot play this video.{" "}
+        <a href={sitePath(src)}>Open the video file</a>.
+      </p>
+    </video>
+    {decorative && (
+      <button type="button" hidden>
+        Pause background video
+      </button>
+    )}
+    {!decorative && (
+      <figcaption class="type-caption">
+        {label}
+        {transcript && (
+          <>
+            {" "}
+            / <a href={sitePath(transcript)}>Read transcript</a>
+          </>
+        )}
+      </figcaption>
+    )}
+  </figure>
+</portfolio-video>
+
+<style>
+  portfolio-video {
+    display: block;
+  }
+  video {
+    width: 100%;
+    aspect-ratio: var(--ratio-video);
+    object-fit: contain;
+    background-color: var(--color-surface);
+  }
+  figcaption {
+    margin-block-start: var(--space-3);
+    color: var(--color-secondary);
+  }
+  button {
+    margin-block-start: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    border: var(--border-rule);
+    background-color: var(--color-page);
+    color: var(--color-accent);
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  class PortfolioVideo extends HTMLElement {
+    private preference = matchMedia("(prefers-reduced-motion: reduce)");
+    private userPaused = false;
+    private toggle = () => {
+      this.userPaused = !this.userPaused;
+      this.update();
+    };
+    private update = () => {
+      const video = this.querySelector("video");
+      if (!video || !this.hasAttribute("data-decorative")) return;
+      const button = this.querySelector("button");
+      if (button) {
+        button.hidden = this.preference.matches;
+        button.textContent = this.userPaused
+          ? "Play background video"
+          : "Pause background video";
+      }
+      if (this.preference.matches || this.userPaused) video.pause();
+      else
+        video
+          .play()
+          .catch((error: unknown) =>
+            console.warn("Decorative video playback was blocked.", error),
+          );
+    };
+    connectedCallback() {
+      this.preference.addEventListener("change", this.update);
+      this.querySelector("button")?.addEventListener("click", this.toggle);
+      this.update();
+    }
+    disconnectedCallback() {
+      this.preference.removeEventListener("change", this.update);
+      this.querySelector("button")?.removeEventListener("click", this.toggle);
+      this.querySelector("video")?.pause();
+    }
+  }
+  customElements.define("portfolio-video", PortfolioVideo);
+</script>

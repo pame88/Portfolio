@@ -1,0 +1,105 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "./BaseLayout.astro";
+import Section from "../components/layout/Section.astro";
+import Heading from "../components/typography/Heading.astro";
+import Text from "../components/typography/Text.astro";
+import ResponsiveImage from "../components/media/ResponsiveImage.astro";
+import VideoPlayer from "../components/media/VideoPlayer.astro";
+import { getImage } from "astro:assets";
+import { sitePath } from "../utils/routing";
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+const { project } = Astro.props;
+const {
+  title,
+  description,
+  category,
+  placeholder,
+  heroMedia,
+  role,
+  timeline,
+  collaborators,
+  tools,
+  tags,
+} = project.data;
+const socialImage = await getImage({
+  src: project.data.thumbnail.src,
+  width: 1200,
+  format: "png",
+});
+const metadata = [
+  { label: "Role", value: role },
+  { label: "Timeline", value: timeline },
+  { label: "Collaborators", value: collaborators.join(", ") },
+  { label: "Tools", value: tools.join(", ") },
+].filter(({ value }) => value);
+---
+
+<BaseLayout title={title} description={description} image={socialImage.src}>
+  <Section>
+    <a
+      class="type-caption"
+      href={sitePath(category === "work" ? "/work/" : "/creative/")}
+    >
+      Back to {category === "work" ? "work" : "creative"}
+    </a>
+    <p class="type-label eyebrow">
+      {placeholder ? "Placeholder project / " : ""}
+      {category === "work" ? "UX & product design" : "Creative project"}
+    </p>
+    <Heading as="h1" variant="xl">
+      {title}
+    </Heading>
+    <div class="intro">
+      <Text size="l" tone="secondary">
+        {description}
+      </Text>
+    </div>
+    {metadata.length > 0 && (
+      <dl>
+        {metadata.map(({ label, value }) => (
+          <div>
+            <dt class="type-label">{label}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
+      </dl>
+    )}
+    {tags.length > 0 && (
+      <p class="type-caption secondary">{tags.join(" / ")}</p>
+    )}
+    {heroMedia && (
+      <div class="hero-media">
+        {heroMedia.type === "image" ? (
+          <ResponsiveImage src={heroMedia.src} alt={heroMedia.alt} priority />
+        ) : (
+          <VideoPlayer
+            src={heroMedia.src}
+            poster={heroMedia.poster}
+            label={heroMedia.label}
+            captions={heroMedia.captions}
+            transcript={heroMedia.transcript}
+          />
+        )}
+      </div>
+    )}
+  </Section>
+  <div class="rule">
+    <slot />
+  </div>
+</BaseLayout>
+
+<style>
+  dl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+    margin: 0;
+  }
+  dd {
+    margin: 0;
+    color: var(--color-secondary);
+  }
+</style>

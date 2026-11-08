@@ -1,0 +1,77 @@
+---
+import PageContainer from "./PageContainer.astro";
+import { sitePath } from "../../utils/routing";
+const links = [
+  { label: "Work", href: "/work/" },
+  { label: "Creative", href: "/creative/" },
+  { label: "About", href: "/about/" },
+];
+const pathname = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <PageContainer>
+    <div class="header-content">
+      <a class="brand" href={sitePath("/")} aria-label="Portfolio home">
+        Portfolio<span class="brand-note type-label">Foundation</span>
+      </a>
+      <nav aria-label="Primary">
+        <ul>
+          {links.map(({ label, href }) => (
+            <li>
+              <a
+                href={sitePath(href)}
+                aria-current={
+                  pathname.startsWith(sitePath(href)) ? "page" : undefined
+                }
+              >
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  </PageContainer>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: var(--border-rule);
+  }
+  .header-content {
+    min-height: var(--header-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    padding-block: var(--space-6);
+  }
+  .brand {
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: var(--weight-medium);
+  }
+  .brand-note {
+    display: block;
+    color: var(--color-muted);
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  nav a {
+    color: var(--color-secondary);
+    text-decoration: none;
+  }
+  nav a:hover,
+  nav a[aria-current="page"] {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+</style>

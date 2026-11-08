@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ResponsiveImage from "../media/ResponsiveImage.astro";
+import { sitePath } from "../../utils/routing";
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+const { project } = Astro.props;
+const { title, description, category, thumbnail, placeholder } = project.data;
+---
+
+<article class="project-card">
+  <a href={sitePath(`/projects/${project.id}/`)}>
+    <ResponsiveImage
+      src={thumbnail.src}
+      alt={thumbnail.alt}
+      crop
+      sizes="(max-width: 48rem) 90vw, (max-width: 72rem) 45vw, 32vw"
+    />
+    <div class="card-content">
+      <p class="type-label secondary">
+        {category === "work" ? "UX / Product" : "Creative"}
+        {placeholder && " / Placeholder"}
+      </p>
+      <h3 class="type-heading-m">{title}</h3>
+      <p class="type-body-s secondary">{description}</p>
+    </div>
+  </a>
+</article>
+
+<style>
+  a {
+    display: block;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  a:hover h3 {
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+  .card-content {
+    display: grid;
+    gap: var(--space-3);
+    padding-block: var(--space-6);
+  }
+</style>

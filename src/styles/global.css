@@ -1,0 +1,131 @@
+@import "./tokens.css";
+@import "./typography.css";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-page);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--type-body-m);
+  line-height: var(--leading-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure {
+  margin: 0;
+}
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+h1 {
+  font-size: var(--type-heading-xl);
+}
+h2 {
+  font-size: var(--type-heading-l);
+}
+h3 {
+  font-size: var(--type-heading-m);
+}
+h4 {
+  font-size: var(--type-heading-s);
+}
+
+a {
+  color: var(--color-accent);
+  text-underline-offset: var(--space-1);
+  transition: var(--transition-color);
+}
+
+a:hover {
+  color: var(--color-accent-hover);
+}
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+button {
+  font: inherit;
+}
+
+.flow > * + * {
+  margin-block-start: var(--space-6);
+}
+.flow > :is(h2, h3, h4):not(:first-child) {
+  margin-block-start: var(--space-12);
+}
+.secondary {
+  color: var(--color-secondary);
+}
+.eyebrow {
+  color: var(--color-secondary);
+}
+.intro {
+  max-width: var(--width-reading);
+}
+.section-heading {
+  margin-block-end: var(--space-8);
+}
+.rule {
+  border-top: var(--border-rule);
+}
+.hero-media {
+  margin-block-start: var(--space-12);
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns-single), minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+
+@media (--tablet) {
+  .project-grid {
+    grid-template-columns: repeat(var(--grid-columns-double), minmax(0, 1fr));
+  }
+}
+
+@media (--desktop) {
+  .project-grid--three {
+    grid-template-columns: repeat(var(--grid-columns-triple), minmax(0, 1fr));
+  }
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: var(--gutter-page);
+  top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-page);
+  z-index: var(--layer-overlay);
+  transform: translateY(-200%);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none;
+    animation: none;
+    scroll-behavior: auto;
+  }
+}

@@ -1,0 +1,63 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/layout/Section.astro";
+import Heading from "../components/typography/Heading.astro";
+import Text from "../components/typography/Text.astro";
+import ProjectGrid from "../components/portfolio/ProjectGrid.astro";
+import { publishedProjects } from "../utils/projects";
+import { sitePath } from "../utils/routing";
+const featured = (await publishedProjects()).filter(
+  ({ data }) => data.featured,
+);
+---
+
+<BaseLayout
+  title="Design & creative work"
+  description="An editorial portfolio foundation for UX, product design, and creative projects. Content is clearly labeled placeholder material."
+>
+  <Section>
+    <p class="type-label eyebrow">Design & creative portfolio / In progress</p>
+    <Heading as="h1" variant="display">
+      A place for
+      <br />
+      thoughtful work.
+    </Heading>
+    <div class="intro">
+      <Text size="l" tone="secondary">
+        This is a portfolio foundation. A personal introduction and real
+        projects will be added here; the examples below demonstrate the system,
+        not professional work.
+      </Text>
+    </div>
+    <Text>
+      <a href={sitePath("/work/")}>Explore work</a> /{" "}
+      <a href={sitePath("/creative/")}>See creative projects</a>
+    </Text>
+  </Section>
+  <div class="rule">
+    <Section id="selected-work">
+      <Heading as="h2" variant="l">
+        Selected work
+      </Heading>
+      <Text tone="secondary">
+        Clearly labeled samples, ready to be replaced with author-supplied
+        content.
+      </Text>
+      <ProjectGrid projects={featured} />
+    </Section>
+  </div>
+  <div class="rule">
+    <Section width="reading">
+      <Heading as="h2" variant="m">
+        An evolving collection.
+      </Heading>
+      <Text>
+        UX case studies and image-first creative projects share a considered
+        foundation, with space for different kinds of storytelling.
+      </Text>
+      <Text>
+        <a href={sitePath("/about/")}>About this portfolio</a>
+      </Text>
+    </Section>
+  </div>
+</BaseLayout>

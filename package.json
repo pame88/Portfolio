@@ -1,0 +1,36 @@
+{
+  "name": "design-creative-portfolio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "lint": "stylelint \"src/**/*.{css,astro}\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "validate": "npm run format:check && npm run lint && npm run check && npm test"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^5.0.6",
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^6.4.8"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@types/node": "^24.0.0",
+    "postcss-custom-media": "^11.0.0",
+    "postcss-html": "^1.8.0",
+    "prettier": "^3.6.0",
+    "prettier-plugin-astro": "^1.1.2",
+    "stylelint": "^17.16.0",
+    "stylelint-declaration-strict-value": "^1.10.0",
+    "typescript": "^5.9.0"
+  }
+}
