@@ -2,7 +2,7 @@
 
 ## Product requirements
 
-A personal UX/product design and creative portfolio, hosted as a static GitHub Pages site. The direction is minimal, editorial, contemporary, typography-driven, image-forward, and bespoke rather than template-like. Keep the work central; avoid generic SaaS decoration, unnecessary gradients, and premature aesthetic commitments.
+A personal UX/product design and creative portfolio, hosted as a static GitHub Pages site. The direction is minimal, editorial, contemporary, typography-driven, image-forward, and bespoke rather than template-like. The coastal palette combines faded blues, sandy beige, sea-glass green, and weathered white through shared semantic tokens; pale surfaces are paired with readable darker text. Keep the work central; avoid generic SaaS decoration, unnecessary gradients, and unrelated aesthetic changes.
 
 Priority order: visual quality, design consistency, composable components, creative layout flexibility, media presentation, responsiveness, performance/accessibility, maintainability. When uncertain: consistency > reuse > simplicity > convenience.
 
@@ -14,12 +14,12 @@ Home introduces the portfolio and selected work; Work lists UX/product projects;
 - `src/content/projects/` holds typed MDX metadata and composed storytelling. A single generated project route supplies shared chrome, not a rigid case-study template.
 - `src/components/` owns layout, typography, media, and portfolio building blocks. `src/layouts/` owns document metadata and project framing. Pages assemble components, not copies of their styling.
 - `src/styles/tokens.css` is the visual source of truth; global/typography styles consume it. Stylelint checks token use in CSS and Astro component styles. Breakpoints use custom-media declarations expanded by PostCSS, since native CSS variables cannot be used in media queries.
-- `src/assets/` contains approved build-processed media. `public/media/` is reserved for deliberately unprocessed files such as small video clips. Existing root asset folders remain untouched and are not public site content.
+- `src/assets/` contains approved imported media. Images are copied unchanged to build output, not resized or re-encoded. `public/media/` is reserved for deliberately unprocessed files such as small video clips. Existing root asset folders remain untouched and are not public site content.
 - Native links and CSS provide initial interaction. Introduce islands only when a real interaction requires them.
 
 ## Media and accessibility
 
-Raster imagery uses Astro `Picture` for responsive modern formats and reserved dimensions. SVG demonstration art is a labeled vector placeholder, not an optimization benchmark. Hero media loads eagerly; cards and lower-page media load lazily. Natural aspect ratios are the default; cards have a shared optional crop.
+All imagery uses original full-resolution files without downsampling or lossy conversion, even on mobile. The shared `ResponsiveImage` component uses native `img` with imported source dimensions and responsive CSS, not generated variants. Social images and video posters also retain their original files. This is an intentional quality-over-bandwidth decision: downloads may be much larger, and source quality remains the upper bound. SVG demonstration art stays vector. Hero media loads eagerly; cards and lower-page media load lazily. Project-card thumbnails never crop: width follows the grid column and height follows the image's natural aspect ratio. Other media preserves natural aspect ratios by default, with an intentional crop available when needed.
 
 Native content video has controls, a poster, no automatic download beyond metadata, and a caption-track/transcript authoring contract. Decorative loops are muted, inline, have an explicit pause/play button, and pause under reduced motion (including preference changes). External providers are not loaded until the user follows an external link; an embed component can be added later with a privacy/accessibility decision.
 

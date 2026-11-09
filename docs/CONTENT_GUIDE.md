@@ -67,9 +67,9 @@ heroMedia:
 
 ## Images
 
-Import raster images for Astro processing; `ResponsiveImage` emits responsive WebP/AVIF sources and width/height. SVGs remain vectors. Use meaningful alt text; use `alt=""` only for decorative imagery. Captions and credits are separate from alternatives.
+Import the highest-resolution approved originals. `ResponsiveImage` serves the original file at its full source resolution on every device, without resizing, lossy conversion, or smaller `srcset` candidates. Astro copies imported files into the static output; CSS still scales their display responsively, and source width/height reserve layout space. SVGs remain vectors. Project social images and video posters also use their original files. This quality-first policy intentionally increases mobile bandwidth and download time; lazy loading remains enabled below the hero. It cannot restore detail missing from a low-resolution source or an already-compressed original. Use meaningful alt text; use `alt=""` only for decorative imagery. Captions and credits are separate from alternatives.
 
-Set `priority` only for important above-the-fold imagery. Set `sizes` when a composition differs from the default full-content width. Cards explicitly crop; project media otherwise preserves its natural aspect ratio. Do not serve high-resolution source files directly from `public/` by default.
+Set `priority` only for important above-the-fold imagery. Project-card thumbnails always show the complete image at the grid-column width; their height follows the natural aspect ratio. Do not crop thumbnails or vary their width based on image proportions. Project media also preserves its natural aspect ratio unless an author intentionally selects a crop. Keep originals imported from `src/assets/` rather than duplicating them in `public/`.
 
 Existing root media folders are source material, not approval to publish. Select assets with the owner first.
 

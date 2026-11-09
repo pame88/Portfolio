@@ -1,5 +1,4 @@
 ---
-import { Picture } from "astro:assets";
 import type { ImageMetadata } from "astro";
 interface Props {
   src: ImageMetadata;
@@ -8,7 +7,6 @@ interface Props {
   credit?: string;
   priority?: boolean;
   crop?: boolean;
-  sizes?: string;
 }
 const {
   src,
@@ -17,24 +15,15 @@ const {
   credit,
   priority = false,
   crop = false,
-  sizes = "(max-width: 76rem) 90vw, 76rem",
 } = Astro.props;
-const widths = [
-  ...new Set(
-    [480, 800, 1200, 1600]
-      .filter((width) => width < src.width)
-      .concat(src.width),
-  ),
-];
 ---
 
 <figure class:list={["media", { cropped: crop }]}>
-  <Picture
-    src={src}
+  <img
+    src={src.src}
     alt={alt}
-    formats={src.format === "svg" ? ["svg"] : ["avif", "webp"]}
-    widths={widths}
-    sizes={sizes}
+    width={src.width}
+    height={src.height}
     loading={priority ? "eager" : "lazy"}
     fetchpriority={priority ? "high" : "auto"}
     decoding="async"

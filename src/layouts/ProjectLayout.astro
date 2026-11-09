@@ -6,7 +6,6 @@ import Heading from "../components/typography/Heading.astro";
 import Text from "../components/typography/Text.astro";
 import ResponsiveImage from "../components/media/ResponsiveImage.astro";
 import VideoPlayer from "../components/media/VideoPlayer.astro";
-import { getImage } from "astro:assets";
 import { sitePath } from "../utils/routing";
 interface Props {
   project: CollectionEntry<"projects">;
@@ -24,11 +23,7 @@ const {
   tools,
   tags,
 } = project.data;
-const socialImage = await getImage({
-  src: project.data.thumbnail.src,
-  width: 1200,
-  format: "png",
-});
+const socialImage = project.data.thumbnail.src;
 const metadata = [
   { label: "Role", value: role },
   { label: "Timeline", value: timeline },

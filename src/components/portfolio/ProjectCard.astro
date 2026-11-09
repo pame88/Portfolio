@@ -11,12 +11,7 @@ const { title, description, category, thumbnail, placeholder } = project.data;
 
 <article class="project-card">
   <a href={sitePath(`/projects/${project.id}/`)}>
-    <ResponsiveImage
-      src={thumbnail.src}
-      alt={thumbnail.alt}
-      crop
-      sizes="(max-width: 48rem) 90vw, (max-width: 72rem) 45vw, 32vw"
-    />
+    <ResponsiveImage src={thumbnail.src} alt={thumbnail.alt} />
     <div class="card-content">
       <p class="type-label secondary">
         {category === "work" ? "UX / Product" : "Creative"}
