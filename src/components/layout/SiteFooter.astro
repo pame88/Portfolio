@@ -3,10 +3,10 @@ import PageContainer from "./PageContainer.astro";
 import { sitePath } from "../../utils/routing";
 ---
 
-<footer class="site-footer">
+<footer class="site-footer color-pair color-pair--grass">
   <PageContainer>
     <div class="footer-content type-caption">
-      <p>Portfolio foundation. All sample projects are placeholders.</p>
+      <p>Portfolio in progress. Demonstration projects are labeled.</p>
       <a href={sitePath("/about/")}>About this portfolio</a>
     </div>
   </PageContainer>
@@ -14,7 +14,6 @@ import { sitePath } from "../../utils/routing";
 
 <style>
   .site-footer {
-    background-color: var(--color-surface-warm);
     border-top: var(--border-rule);
     color: var(--color-secondary);
   }

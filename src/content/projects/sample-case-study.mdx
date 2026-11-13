@@ -1,37 +1,413 @@
 ---
 title: "Dragon Admin Center"
-description: "A placeholder showing how a UX narrative can use shared typography, layout, and media."
+description: "Designing the administration experience for Microsoft's clinical AI solutions, including Dragon Copilot."
 category: work
+introLayout: hero-first
 thumbnail:
   src: "../../assets/DACScreens/DACSplash.png"
-  alt: "Placeholder artwork: a green panel and abstract lines on a pale canvas."
+  alt: "Dragon Admin Center splash with the project title, Dragon logo, and a laptop displaying the admin interface."
 heroMedia:
   type: image
-  src: "../../assets/placeholder.svg"
-  alt: "Abstract placeholder layout, not a real product interface."
+  src: "../../assets/DACScreens/DACSplash.png"
+  alt: "Dragon Admin Center splash with the project title, Dragon logo, and a laptop displaying the admin interface."
 featured: true
 published: true
-placeholder: true
+placeholder: false
 order: 1
-tags: ["Narrative example"]
+role: "Product Designer"
+tools: ["Figma"]
+tags: ["UX/UI Design", "UX Research", "Design Systems"]
 ---
 
 import Section from "../../components/layout/Section.astro";
+import ResponsiveImage from "../../components/media/ResponsiveImage.astro";
+import ImageCarousel from "../../components/media/ImageCarousel.astro";
+import SectionHeading from "../../components/typography/SectionHeading.astro";
+import {
+  environmentSlides,
+  organizationSlides,
+  removalSlides,
+  ehrSlides,
+  processImages,
+} from "../dragon-admin-center-media";
 
-<Section width="reading">
-  ## A narrative, not a real project
+<Section>
 
-This demonstration shows the structure of a case study. It does not represent
-client work, research, or professional accomplishments.
+<SectionHeading
+  id="product-overview"
+  title="Product overview"
+  label="01 / Overview"
+  tone="pink"
+/>
 
-## Context and process
+[Dragon Admin Center documentation on Microsoft Learn](https://learn.microsoft.com/en-us/industry/healthcare/dragon-admin-center/)
 
-Replace this text with the actual problem, role, constraints, and design
-process. Add approved images and captions using the shared media components.
+The Dragon Admin Center (DAC) is the admin center supporting Microsoft's
+clinical AI solutions, namely Dragon Copilot. In DAC, admins can control their
+clinicians' experience within Dragon Copilot through permission management
+based on their organization's unique needs and configuration. They can
+provision products for their end users and manage what they have access to
+within those products.
 
-## Outcomes
+### Problem statement / How might we
 
-Document genuine results when available. The content system does not require
-fabricated metrics or a prescribed storytelling format.
+- Allow management of multiple environments within DAC, each with its own
+  content and configuration.
+- Allow flexibility in configurations to account for varying organization
+  sizes and structures.
+- Support intuitive, easy navigation while avoiding repetition in content
+  through cross-linking.
+- Make it easy to switch views between users and organizational units.
+
+### Goal
+
+Lay the foundation for Microsoft's Health and Life Sciences (HLS) ecosystem by
+providing a critical support platform for Dragon Copilot and all future
+Microsoft HLS products.
+
+### My contributions
+
+- Creating UX specifications for handoff to developers.
+- Creating a design system including a component toolkit and UX patterns.
+- Creating accessibility specifications and getting them approved.
+- Reviewing implementation for consistency with specifications.
+
+<nav aria-label="Case study contents">
+  <ul>
+    <li>
+      <a href="#the-design">The design</a>
+    </li>
+    <li>
+      <a href="#the-process">The process</a>
+    </li>
+  </ul>
+</nav>
+
+</Section>
+
+<Section>
+  <div class="flow">
+
+    <SectionHeading
+      id="the-design"
+      title="The design"
+      label="02 / Design"
+    />
+
+    I worked mainly with one other designer on Dragon Admin Center. Although
+    many of the designs were collaborative, some feature designs were led by me,
+    and I've included the ones I'm most proud of below.
+
+    <SectionHeading
+      id="feature-highlight-environment-picker"
+      title="Environment picker"
+      label="Feature 01"
+      as="h3"
+    />
+
+    One simple but effective solution that I conceived was the environment
+    picker. DAC allows multiple environments to be created, each containing a
+    unique organization configuration and content. Customer admins need to
+    easily switch between environments to make edits or compare configurations.
+
+    **How might we:** Enable a way to easily switch between environments at any
+    level of the application.
+
+    **Customer need:**
+
+    - Quickly compare configurations between environments.
+    - Quickly compare content between environments.
+
+    #### The solution
+
+  </div>
+  <ImageCarousel
+    id="environment-solution"
+    label="Environment picker solution"
+    slides={environmentSlides}
+  />
+  <div class="flow">
+
+    This solution facilitates easy comparison between environments, allowing the
+    admin to navigate to the content they want to see and switch environments in
+    that context, rather than switching somewhere else and navigating back to
+    the content. It works across different content types, such as list pages and
+    details pages for environments or users. It's dynamic too: if a detail page
+    can't be replicated in a different environment, it reverts to the common
+    root page.
+
+  </div>
+</Section>
+
+<Section id="organization-hierarchy">
+  <div class="flow">
+
+    <SectionHeading
+      id="feature-highlight-organization-hierarchy"
+      title="Organization hierarchy"
+      label="Feature 02"
+      as="h3"
+    />
+
+    One of my largest and most important feature designs in DAC was the
+    organization hierarchy.
+
+    **How might we:** Establish an infrastructure that allows for rigid
+    distinction between units on the basis of members, settings, and library
+    content while remaining flexible enough to accommodate customers' varying
+    organization configurations.
+
+    **Customer need:**
+
+    - Create a hierarchical structure of units representing different levels of
+      an organization.
+    - Easily alter the existing structure.
+    - Search the structure and navigate clear results across all levels,
+      including possible duplicates.
+
+    #### The solution
+
+  </div>
+  <ImageCarousel
+    id="organization-solution"
+    label="Organization hierarchy solution"
+    slides={organizationSlides}
+  />
+</Section>
+
+<Section id="remove-user-data">
+  <div class="flow">
+
+    <SectionHeading
+      id="feature-highlight-remove-user-data"
+      title="Remove user data"
+      label="Feature 03"
+      as="h3"
+    />
+
+    An especially challenging feature to design was removing user data. To
+    comply with privacy requirements, we needed to allow removal of user data
+    from the admin center. The challenge was that we did not yet have a
+    directory of users or a user details page.
+
+    **How might we:** Enable removal of user data from the admin center without
+    a user directory.
+
+    **Requirements:**
+
+    - Allow bulk removal.
+    - Provide clear messaging when each removal succeeds or fails without
+      crowding the UI.
+    - Consider the asynchronous removal process: allow admins to run removals
+      in the background, but display appropriate messaging when needed.
+
+    #### The solution
+
+  </div>
+  <ImageCarousel
+    id="removal-solution"
+    label="Remove user data solution"
+    slides={removalSlides}
+  />
+  <div class="flow">
+
+    By combining a multi-user selector and a table within a drawer, I enabled
+    bulk removal and bulk status updates without crowding the main UI with
+    individual toast messages. The user can check removal statuses at any time,
+    but also knows without checking whether removal is still in progress
+    through a message bar, or whether an operation has failed through a toast.
+    This lets the admin continue performing tasks while removals occur without
+    worrying about forgetting or missing an error.
+
+  </div>
+</Section>
+
+<Section id="add-ehr-user-ids">
+  <div class="flow">
+
+    <SectionHeading
+      id="feature-highlight-add-ehr-user-ids"
+      title="Add EHR user IDs"
+      label="Feature 04"
+      as="h3"
+    />
+
+    Another feature I designed that required an innovative, custom solution was
+    adding EHR (electronic health record) IDs.
+
+    **How might we:** Enable addition of new content to existing objects in bulk,
+    allowing a custom selection of objects to add content to.
+
+    **Customer need:**
+
+    - Add EHR IDs to existing users in bulk.
+    - Modify the list before submitting: delete, add more, or edit.
+
+    #### The solution
+
+    **New pattern:** Add new content to existing objects in bulk.
+
+  </div>
+  <ImageCarousel
+    id="ehr-solution"
+    label="Add EHR user IDs solution"
+    slides={ehrSlides}
+  />
+  <div class="flow">
+
+    This solution creates an intermediate state where the objects to be added
+    are clearly listed and the next action is clear. It keeps the content
+    flexible, allowing the admin to make edits and confirm the data before
+    submitting.
+
+  </div>
+</Section>
+
+<Section>
+  <div class="flow">
+
+    <SectionHeading
+      id="the-process"
+      title="The process"
+      label="03 / Process"
+      tone="violet"
+    />
+
+    - Audit of Microsoft Admin Centers
+    - Leveraging Microsoft Admin Design System
+    - GA design
+    - Research
+
+    <SectionHeading
+      id="audit-of-microsoft-admin-centers"
+      title="Audit of Microsoft Admin Centers"
+      label="Process 01"
+      as="h3"
+      tone="violet"
+    />
+
+    In my audit of existing Microsoft Admin Centers, I distinguished between two
+    types of patterns: content patterns and interaction patterns.
+
+    **Content patterns** relate to how the admin center handles certain types
+    of information: home pages, user details, and settings.
+
+    **Interaction patterns** focus on how the admin center handles certain
+    interactions: adding, editing, and searching.
+
+  </div>
+  <div class="project-grid">
+    <ResponsiveImage {...processImages.contentPatterns} />
+    <ResponsiveImage {...processImages.contentExample} />
+    <ResponsiveImage {...processImages.interactionPatterns} />
+    <ResponsiveImage {...processImages.interactionExample} />
+  </div>
+</Section>
+
+<Section>
+  <div class="flow">
+
+    <SectionHeading
+      id="leveraging-microsoft-admin-design-system-mads"
+      title="Leveraging Microsoft Admin Design System (MADS)"
+      label="Process 02"
+      as="h3"
+      tone="violet"
+    />
+
+    The [Microsoft Admin Design System](https://admincontrolsdemoapps.z22.web.core.windows.net/storybook/latest/Storybook/?path=/docs/about--docs)
+    is a design system developed for teams within Microsoft building admin
+    centers. Our UX team was interested in how we might leverage MADS, so we met
+    with its primary contact, Aaron Woo.
+
+    Over several meetings, we determined which components we could use and how
+    to follow their guidance. Although MADS was built on Fluent v8 rather than
+    v9, which we designed with, we still used their left navigation component
+    and took direct inspiration for our layout templates and design patterns.
+
+    I created our own design system as the foundation for DAC.
+
+  </div>
+</Section>
+
+<Section>
+  <div class="flow">
+
+    <SectionHeading
+      id="ga-design"
+      title="GA design"
+      label="Process 03"
+      as="h3"
+      tone="violet"
+    />
+
+    #### UX specifications
+
+    The heart of the work in designing the Admin Center is the UX
+    specifications. They are critical to developer handoff: workflows are laid
+    out, components are used in context, and developer notes inform the
+    implementation.
+
+    Workflows are separated by section, and each screen has a title and
+    annotations describing dependencies, actions, and more.
+
+  </div>
+  <ResponsiveImage {...processImages.uxWorkflows} />
+  <ResponsiveImage {...processImages.uxAnnotations} />
+  <div class="flow">
+
+    #### Accessibility specifications
+
+    Another critical aspect of preparing the design for general availability
+    was meeting Microsoft's accessibility standards. This multifaceted process
+    involved:
+
+    - Getting familiar with Microsoft's accessibility standards for design and
+      documentation.
+    - Creating specifications detailing the accessibility of our screens and
+      components.
+    - Getting these specifications approved by the Microsoft Cloud + AI
+      Accessibility team.
+    - Handing specifications off to developers for implementation.
+
+  </div>
+  <ResponsiveImage {...processImages.accessibilitySpecification} />
+  <ResponsiveImage {...processImages.accessibilityAnnotations} />
+  <div class="flow">
+
+    #### UX reviews
+
+    Once the designs were implemented, it was also my responsibility to review:
+
+    - **Functionality:** Does everything work?
+    - **Adherence to spec:** Does everything work and look as intended?
+    - **Accessibility:** Is all the accessibility correct?
+
+  </div>
+</Section>
+
+<Section>
+  <div class="flow">
+
+    <SectionHeading
+      id="customer-interactions"
+      title="Customer interactions"
+      label="Process 04"
+      as="h3"
+      tone="violet"
+    />
+
+    After GA of DAC, there was product direction to gauge customer impressions
+    of the platform. We had several private-preview customers with early
+    access, including Braden Health, who we could interface with. I led the
+    effort to gather feedback on the existing UX and understand their
+    expectations and ideal improvements.
+
+    After an initial survey, we met to dissect the responses, followed by a
+    series of deep dives into specific features and enhancement requests.
+    Those requests were triaged as tickets in our ADO backlog, helping
+    prioritize post-GA features and informing our design approach.
+
+  </div>
 
 </Section>

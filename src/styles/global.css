@@ -14,6 +14,47 @@ body {
   line-height: var(--leading-body);
 }
 
+.color-pair {
+  --color-text: var(--pair-ink);
+  --color-secondary: var(--pair-ink);
+  --color-muted: var(--pair-ink);
+  --color-accent: var(--pair-ink);
+  --color-accent-hover: var(--pair-ink);
+  --color-focus: var(--pair-ink);
+  --color-utility-blue: var(--pair-ink);
+  --color-utility-orange: var(--pair-ink);
+  --color-accent-complement: var(--pair-ink);
+  --color-utility-blue-complement: var(--pair-ink);
+  --color-utility-orange-complement: var(--pair-ink);
+  --color-text-complement: var(--pair-ink);
+  --color-border: var(--pair-ink);
+  --border-rule: var(--border-width) solid var(--color-border);
+  --focus-ring: 2px solid var(--color-focus);
+
+  background-color: var(--pair-surface);
+  color: var(--color-text);
+}
+
+.color-pair--sand {
+  --pair-surface: var(--color-sand-light);
+  --pair-ink: var(--color-sand-dark);
+}
+
+.color-pair--sky {
+  --pair-surface: var(--color-sky-light);
+  --pair-ink: var(--color-ocean-dark);
+}
+
+.color-pair--grass {
+  --pair-surface: var(--color-grass-light);
+  --pair-ink: var(--color-grass-dark);
+}
+
+.color-pair--sunset {
+  --pair-surface: var(--color-sunset-pink);
+  --pair-ink: var(--color-horizon-purple);
+}
+
 h1,
 h2,
 h3,
@@ -75,9 +116,6 @@ button {
 }
 .eyebrow {
   color: var(--color-secondary);
-}
-.intro {
-  max-width: var(--width-reading);
 }
 .section-heading {
   margin-block-end: var(--space-8);

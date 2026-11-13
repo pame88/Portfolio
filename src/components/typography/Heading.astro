@@ -1,11 +1,34 @@
 ---
 interface Props {
   as?: "h1" | "h2" | "h3" | "h4";
-  variant?: "display" | "xl" | "l" | "m" | "s";
+  variant?: "display" | "graffiti" | "xl" | "l" | "m" | "s";
+  tone?: "magenta" | "blue" | "orange" | "violet";
 }
-const { as: Tag = "h2", variant = "l" } = Astro.props;
+const { as: Tag = "h2", variant = "l", tone } = Astro.props;
 ---
 
-<Tag class={variant === "display" ? "type-display" : `type-heading-${variant}`}>
+<Tag
+  class:list={[
+    variant === "display" || variant === "graffiti"
+      ? `type-${variant}`
+      : `type-heading-${variant}`,
+    tone && `heading--${tone}`,
+  ]}
+>
   <slot />
 </Tag>
+
+<style>
+  .heading--magenta {
+    --heading-ink: var(--color-accent);
+  }
+  .heading--blue {
+    --heading-ink: var(--color-utility-blue);
+  }
+  .heading--orange {
+    --heading-ink: var(--color-utility-orange);
+  }
+  .heading--violet {
+    --heading-ink: var(--color-focus);
+  }
+</style>

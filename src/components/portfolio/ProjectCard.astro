@@ -14,11 +14,11 @@ const { title, description, category, thumbnail, placeholder } = project.data;
     <ResponsiveImage src={thumbnail.src} alt={thumbnail.alt} />
     <div class="card-content">
       <p class="type-label secondary">
-        {category === "work" ? "UX / Product" : "Creative"}
+        {category === "work" ? "UX / Product" : "Other"}
         {placeholder && " / Placeholder"}
       </p>
-      <h3 class="type-heading-m">{title}</h3>
-      <p class="type-body-s secondary">{description}</p>
+      <h3 class="type-heading-m type-project-title">{title}</h3>
+      <p class="type-body-m type-subtitle secondary">{description}</p>
     </div>
   </a>
 </article>

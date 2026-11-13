@@ -6,7 +6,6 @@ import Heading from "../components/typography/Heading.astro";
 import Text from "../components/typography/Text.astro";
 import ResponsiveImage from "../components/media/ResponsiveImage.astro";
 import VideoPlayer from "../components/media/VideoPlayer.astro";
-import { sitePath } from "../utils/routing";
 interface Props {
   project: CollectionEntry<"projects">;
 }
@@ -15,6 +14,7 @@ const {
   title,
   description,
   category,
+  introLayout,
   placeholder,
   heroMedia,
   role,
@@ -24,45 +24,52 @@ const {
   tags,
 } = project.data;
 const socialImage = project.data.thumbnail.src;
+const heroFirst = introLayout === "hero-first";
 const metadata = [
-  { label: "Role", value: role },
-  { label: "Timeline", value: timeline },
-  { label: "Collaborators", value: collaborators.join(", ") },
-  { label: "Tools", value: tools.join(", ") },
-].filter(({ value }) => value);
+  { label: "Role", values: role ? [role] : [] },
+  { label: "Timeline", values: timeline ? [timeline] : [] },
+  { label: "Collaborators", values: collaborators },
+  { label: "Tools", values: tools },
+].filter(({ values }) => values.length > 0);
+const pillGroups = [...metadata, { label: "Skills", values: tags }].filter(
+  ({ values }) => values.length > 0,
+);
 ---
 
 <BaseLayout title={title} description={description} image={socialImage.src}>
   <Section>
-    <a
-      class="type-caption"
-      href={sitePath(category === "work" ? "/work/" : "/creative/")}
+    {(!heroFirst || placeholder) && (
+      <p class="type-label eyebrow">
+        {placeholder ? "Placeholder project" : ""}
+        {!heroFirst && (
+          <>
+            {placeholder ? " / " : ""}
+            {category === "work" ? "UX & product design" : "Other project"}
+          </>
+        )}
+      </p>
+    )}
+    <Heading
+      as="h1"
+      variant="xl"
+      tone={category === "work" ? "blue" : "magenta"}
     >
-      Back to {category === "work" ? "work" : "creative"}
-    </a>
-    <p class="type-label eyebrow">
-      {placeholder ? "Placeholder project / " : ""}
-      {category === "work" ? "UX & product design" : "Creative project"}
-    </p>
-    <Heading as="h1" variant="xl">
       {title}
     </Heading>
-    <div class="intro">
-      <Text size="l" tone="secondary">
-        {description}
-      </Text>
-    </div>
-    {metadata.length > 0 && (
+    <Text size="l" tone="secondary" variant="subtitle">
+      {description}
+    </Text>
+    {!heroFirst && metadata.length > 0 && (
       <dl>
-        {metadata.map(({ label, value }) => (
+        {metadata.map(({ label, values }) => (
           <div>
             <dt class="type-label">{label}</dt>
-            <dd>{value}</dd>
+            <dd>{values.join(", ")}</dd>
           </div>
         ))}
       </dl>
     )}
-    {tags.length > 0 && (
+    {!heroFirst && tags.length > 0 && (
       <p class="type-caption secondary">{tags.join(" / ")}</p>
     )}
     {heroMedia && (
@@ -80,6 +87,22 @@ const metadata = [
         )}
       </div>
     )}
+    {heroFirst && pillGroups.length > 0 && (
+      <dl class="project-details">
+        {pillGroups.map(({ label, values }) => (
+          <div>
+            <dt class="type-label">{label}</dt>
+            <dd>
+              <ul role="list">
+                {values.map((value) => (
+                  <li class="metadata-pill type-caption">{value}</li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    )}
   </Section>
   <div class="rule">
     <slot />
@@ -96,5 +119,30 @@ const metadata = [
   dd {
     margin: 0;
     color: var(--color-secondary);
+  }
+  .project-details {
+    gap: var(--space-6) var(--space-12);
+    margin-block-start: var(--space-6);
+  }
+  .project-details > div {
+    min-width: 0;
+  }
+  .project-details dd {
+    margin-block-start: var(--space-2);
+  }
+  .project-details ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .metadata-pill {
+    padding: var(--space-1) var(--space-3);
+    border: var(--border-rule);
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface);
+    overflow-wrap: anywhere;
   }
 </style>

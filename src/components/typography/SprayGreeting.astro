@@ -1,0 +1,234 @@
+---
+const glyphs: Record<string, { advance: number; stroke: string }> = {
+  H: {
+    advance: 50.2,
+    stroke: "M14-78 5-4 M47-78 33-4 M8-37 44-45",
+  },
+  e: {
+    advance: 48,
+    stroke: "M43-64 14-64 7-7 41-9 M11-35 35-39",
+  },
+  y: {
+    advance: 43.6,
+    stroke: "M2-61 16-14 37-60 M32-30 C39 12 27 60-3 32",
+  },
+  ",": { advance: 17.6, stroke: "M12-6 5 11" },
+  w: {
+    advance: 60.1,
+    stroke: "M12-61 8-7 30-50 30-6 57-61",
+  },
+  l: { advance: 23.9, stroke: "M21-84 10-10 23-10" },
+  c: {
+    advance: 47.7,
+    stroke: "M43-70 C2-88-8-4 38-15",
+  },
+  o: {
+    advance: 47.7,
+    stroke: "M34-55 C0-77-7 2 22-9 S56-58 34-55",
+  },
+  m: {
+    advance: 55.5,
+    stroke: "M7-5 14-57 25-18 47-57 44-5",
+  },
+  " ": { advance: 31.7, stroke: "" },
+  i: { advance: 20.1, stroke: "M17-78 16-72 M14-57 8-3" },
+  n: {
+    advance: 41.3,
+    stroke: "M6-5 14-57 33-7 35-53",
+  },
+};
+const lines = [
+  { text: "Hey,", baseline: 120, scale: 1.4 },
+  { text: "welcome in", baseline: 290, scale: 1 },
+];
+const letters = lines.flatMap(({ text, baseline, scale }) => {
+  let x = 8;
+  return Array.from(text).flatMap((letter) => {
+    const glyph = glyphs[letter];
+    const position = x;
+    x += glyph.advance * scale;
+    return letter === " "
+      ? []
+      : [{ letter, x: position, baseline, scale, stroke: glyph.stroke }];
+  });
+});
+---
+
+<spray-greeting>
+  <h1 aria-label="Hey, welcome in">
+    <svg viewBox="-16 -16 464 348" aria-hidden="true" focusable="false">
+      {letters.map(({ letter, x, baseline, scale, stroke }, index) => (
+        <g
+          transform={`translate(${x} ${baseline}) scale(${scale})`}
+          style={{
+            "--letter-mask": `url(#welcome-paint-${index})`,
+            "--paint-delay": `calc(var(--delay-paint-start) + ${index} * var(--delay-paint-step))`,
+          }}
+        >
+          <defs>
+            <mask
+              id={`welcome-paint-${index}`}
+              maskUnits="userSpaceOnUse"
+              x="-20"
+              y="-120"
+              width="120"
+              height="200"
+            >
+              <path class="paint-stroke" d={stroke} pathLength="1" />
+            </mask>
+          </defs>
+          <text class="letter-ink" x="0" y="0">
+            {letter}
+          </text>
+          <path class="spray-tip" d={stroke} pathLength="1" />
+        </g>
+      ))}
+    </svg>
+  </h1>
+</spray-greeting>
+
+<style>
+  spray-greeting {
+    display: block;
+    color: var(--color-accent);
+  }
+  h1 {
+    font-family: var(--font-graffiti);
+    font-weight: var(--weight-regular);
+    line-height: var(--leading-display);
+  }
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  text {
+    font-size: var(--type-paint-glyph);
+    fill: currentColor;
+  }
+  .paint-stroke {
+    fill: none;
+    stroke: white;
+    stroke-width: 36;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .spray-tip {
+    display: none;
+    fill: none;
+    stroke: var(--color-paint-pink);
+    stroke-width: 24;
+    stroke-linecap: round;
+    stroke-dasharray: 0.001 1;
+    opacity: 0;
+  }
+  .is-loading svg {
+    visibility: hidden;
+  }
+  .is-painting .letter-ink {
+    mask: var(--letter-mask);
+  }
+  .is-painting .paint-stroke,
+  .is-painting .spray-tip {
+    animation-name: paint-letter;
+    animation-duration: var(--duration-paint-stroke);
+    animation-delay: var(--paint-delay);
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+  }
+  .is-painting .paint-stroke {
+    stroke-dasharray: 1;
+  }
+  .is-painting .spray-tip {
+    display: block;
+    animation-name: spray-nozzle;
+  }
+  @keyframes paint-letter {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes spray-nozzle {
+    0% {
+      stroke-dashoffset: 1;
+      opacity: 0;
+    }
+    10%,
+    90% {
+      opacity: 0.4;
+    }
+    100% {
+      stroke-dashoffset: 0;
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .is-loading svg {
+      visibility: visible;
+    }
+    .is-painting .letter-ink {
+      mask: none;
+    }
+    .is-painting .paint-stroke,
+    .is-painting .spray-tip {
+      animation: none;
+    }
+    .is-painting .spray-tip {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  class SprayGreeting extends HTMLElement {
+    private preference = matchMedia("(prefers-reduced-motion: reduce)");
+    private finish = () => {
+      this.classList.remove("is-loading", "is-painting");
+    };
+    private motionChanged = () => {
+      if (this.preference.matches) this.finish();
+    };
+    private painted = (event: AnimationEvent) => {
+      if (
+        event.animationName.includes("paint-letter") &&
+        event.target === this.querySelector("g:last-child .paint-stroke")
+      ) {
+        this.finish();
+      }
+    };
+    connectedCallback() {
+      this.preference.addEventListener("change", this.motionChanged);
+      this.addEventListener("animationend", this.painted);
+      if (!this.preference.matches) void this.paint();
+    }
+    private async paint() {
+      this.classList.add("is-loading");
+      try {
+        const fonts = await document.fonts.load(
+          '100px "Sedgwick Ave Display"',
+          "Hey, welcome in",
+        );
+        if (fonts.length === 0) {
+          throw new Error("The graffiti font was not registered.");
+        }
+        this.finish();
+        if (this.isConnected && !this.preference.matches) {
+          this.classList.add("is-painting");
+        }
+      } catch (error: unknown) {
+        console.warn("Greeting animation could not load its font.", error);
+        this.finish();
+      }
+    }
+    disconnectedCallback() {
+      this.preference.removeEventListener("change", this.motionChanged);
+      this.removeEventListener("animationend", this.painted);
+      this.finish();
+    }
+  }
+  customElements.define("spray-greeting", SprayGreeting);
+</script>

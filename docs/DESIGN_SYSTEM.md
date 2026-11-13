@@ -1,49 +1,148 @@
 # Design system
 
-## Source of truth
+## Direction and source of truth
 
-`src/styles/tokens.css` owns primitive scales and semantic aliases. The palette is coastal: faded blues, sandy beige, sea-glass green, and weathered white. Typography and layout remain the existing editorial foundation. Refine visual decisions centrally, not through page-specific overrides.
+The site is simple, sleek, and peaceful, inspired by Cape Cod dunes and beach.
+`src/styles/tokens.css` owns shared visual decisions. The supplied beach
+references inform eight muted colors: paired dune greens, paired sand beiges,
+sunset pink, blueish lavender, sky blue, and ocean blue. Project artwork
+retains its original colors and files; reference photographs are not published.
 
-| Group         | Foundation                                                                                                     |
-| ------------- | -------------------------------------------------------------------------------------------------------------- |
-| Typography    | System sans body, system serif display; regular/medium weights; fluid display and headings                     |
-| Semantic text | display, heading-xl/l/m/s, body-l/m/s, caption, label                                                          |
-| Spacing       | 4, 8, 12, 16, 24, 32, 48, 64, 96, 128px expressed in rem                                                       |
-| Widths        | reading 44rem, content 76rem, wide 90rem, full-bleed                                                           |
-| Layout        | fluid page gutter, shared section spacing and grid gaps; one/two/three-column grid                             |
-| Colors        | weathered-white page, sea-glass surface, sandy warm surface/borders, coastal ink, faded-blue links and focus   |
-| Media         | uncropped thumbnails at grid-column width and natural height; optional 4:3 crop for other media and 16:9 video |
-| Other         | radius, border width, focus offset, motion durations/easing, shadow, header and overlay layers                 |
-| Breakpoints   | `--tablet` at 48rem and `--desktop` at 72rem, expanded at build time                                           |
+## Typography
 
-## Rules
-
-- Components reference semantic text classes and CSS custom properties, not private size/color scales.
-- All nonzero spacing, font sizes, colors, radii, shadows, and animation timing must use tokens. Zero, intrinsic sizing, and structural percentages are deliberate CSS mechanics, not design-scale exceptions.
-- Place new reusable visual decisions in tokens, explain their intended use here, and prefer existing values. Do not duplicate styling in pages.
-- PageContainer aligns gutters for content, reading, wide, or full widths. Section owns vertical rhythm. Heading/Text do not secretly add section spacing.
-- Grids begin with one column, become two at tablet width, and optionally three at desktop width. Typography and gutters scale fluidly without page-specific breakpoints.
-- Full-bleed composition is an explicit container choice, not negative-margin hacks. Gallery expansion must preserve these alignments.
-- Focus remains visible; hover is not the only affordance. Reduced motion removes decorative transitions/loops. Project thumbnails always preserve the complete image: column width stays consistent and height varies with aspect ratio. Other media preserves natural composition unless an author selects a crop.
+- Georgia, with Times New Roman and generic serif fallbacks, gives page titles,
+  chapter headings, and project titles a soft editorial character.
+- Segoe UI, Helvetica Neue, Arial, and generic sans-serif fallbacks support
+  navigation, subheadings, subtitles, body copy, labels, and captions.
+- Headings use regular serif weight; sans-serif subheadings use medium weight.
+  Fluid sizes and balanced wrapping preserve hierarchy on smaller screens.
+- No font service, new dependency, text texture, shadow, or animated greeting
+  is required. System availability can slightly change font metrics, an
+  intentional tradeoff for immediate rendering and zero font downloads.
 
 ## Coastal palette
 
-| Token                              | Color     | Use                                                             |
-| ---------------------------------- | --------- | --------------------------------------------------------------- |
-| `--color-page`                     | `#f5f3ed` | Weathered-white page canvas                                     |
-| `--color-surface`                  | `#dfe9e2` | Pale sea-glass surface; site header and video backdrop          |
-| `--color-surface-warm`             | `#e9dfcf` | Sandy-beige surface; site footer                                |
-| `--color-text`                     | `#293d46` | Deep coastal blue-gray headings and primary text                |
-| `--color-secondary`                | `#4e635e` | Weathered green secondary text and captions                     |
-| `--color-muted`                    | `#506560` | Muted green labels; still readable at small sizes               |
-| `--color-border`                   | `#c8bba6` | Sandy decorative separators, not a sole control/focus indicator |
-| `--color-accent` / `--color-focus` | `#3f6278` | Faded ocean-blue links and keyboard focus                       |
-| `--color-accent-hover`             | `#2e4c60` | Deeper blue interaction state                                   |
+| Primitive token          | Color     | Use                                                    |
+| ------------------------ | --------- | ------------------------------------------------------ |
+| `--color-grass-light`    | `#dce5ca` | Pale dune grass; footer surface                        |
+| `--color-grass-dark`     | `#4e6046` | Muted grass; footer text                               |
+| `--color-sand-light`     | `#f8f6f0` | Original warm off-white; canvas and metadata pills     |
+| `--color-sand-dark`      | `#74634b` | Muted dark beige; subsection-header text and rules     |
+| `--color-sunset-pink`    | `#efcdd2` | Pastel sunset pink; available paired surface           |
+| `--color-horizon-purple` | `#5f5575` | Muted blueish purple; all text and controls on pink    |
+| `--color-sky-light`      | `#d7e8ee` | Pastel sky blue; site header and chapter wave lines    |
+| `--color-ocean-dark`     | `#40596c` | Darker grayish-blue; body text, links, and site header |
 
-Pale colors belong on surfaces, not low-contrast text. All text roles meet a minimum 4.5:1 contrast against each of the three surfaces; focus meets at least 3:1. Header/footer color treatments reuse shared surface tokens without changing spacing or layout. Project artwork retains its original colors and files.
+Semantic color roles alias these eight primitives rather than defining
+additional shades. No white/black ink, opacity-derived UI colors, or
+shadow colors are added. The pastel surfaces carry the reference colors.
+Section headers keep each pair together: dark beige on off-white, dark grass on pale grass,
+blueish purple on pink, and ocean blue on sky blue. Darker members are
+intentionally deep enough for legible small text, rather than pale pastels
+that would fail contrast. Pink is the lighter member of the pink/purple pair;
+purple is ink, not a background.
+
+All four pairings meet at least 4.5:1 contrast, including labels and links.
+Focus uses the same paired ink and exceeds 3:1. Borders are decorative,
+not sole control or focus indicators.
+
+Outside paired section headers and the footer, all text uses the darker
+grayish-blue ocean ink, including page titles, prose, subtitles, labels,
+links, captions, and controls. The page stays off-white. The footer uses
+the complete dune-green pair: pale grass with dark-green text and links.
+All surfaces retain at least 4.5:1 text contrast.
+
+Shared `.color-pair` styling with `--sand`, `--sky`, `--grass`, or `--sunset`
+modifiers sets both background
+and foreground together, including nested heading tones, secondary text,
+links, hover states, borders, and focus rings. Do not select ink independently
+from its surface. Hover retains the paired ink; underlines and focus outlines
+provide interaction feedback without crossing pairs or adding colors.
+
+Existing tone names (`magenta`, `pink`, `orange`, `violet`) and complement
+tokens remain compatible with authored content. They now resolve to the
+eight-color palette. Chapter headers intentionally use the blue pairing
+across all legacy tone values; pale sky-blue wave lines replace the older
+sunset, sky, and grass panels. Purple remains the pink pair's dark ink,
+not an independent surface. Heading tone names
+respect their enclosing pair instead of forcing a different hue.
+Legacy paint tokens and unused
+art components are retained without publishing or rendering them. Their
+assets and font licenses remain untouched; active layouts no longer load
+painted fonts or import the decorative greeting.
+
+## Layout and components
+
+- Keep the existing 4-128px spacing scale and fluid page gutters. All nonzero
+  spacing, colors, font sizes, radii, shadows, and timing use shared tokens.
+  Zero, intrinsic sizing, and structural percentages are CSS mechanics.
+- PageContainer fills available width with shared side padding by default;
+  `width="full"` explicitly removes padding. There is no centered max-width
+  cap. Long desktop prose lines remain an intentional full-width tradeoff.
+- Section owns vertical rhythm. Heading and Text do not add section spacing.
+  Nested groups must not duplicate gutters.
+- Grids start at one column, become two at 48rem, and optionally three at
+  72rem. Typography and gutters scale fluidly without page-specific breakpoints.
+- Home uses the existing welcome phrase as static semantic text. There is no
+  hero artwork, paint stripe, overspray, or entrance animation.
+- The header uses the pastel sky-blue surface while the page stays off-white.
+  Header navigation uses plain sans-serif links without spray texture or shadow, padded targets, visible
+  focus, native wrapping, and an underline plus `aria-current` for the
+  current page. Its brand and links use ocean-blue ink in every state.
+  Footer uses a quiet dune-grass surface with matching dark-green copy and links.
+- Chapter headings retain their 24px text inset but replace filled panels
+  with original SVG wave-line artwork behind the title. All use pale sky-blue
+  lines and ocean-blue ink on the off-white canvas, an intentional exception
+  to the former solid-panel treatment. Ink meets 4.5:1 on both the canvas and
+  the wave color. No additional shade or opacity blend is introduced.
+- `--height-section-wave` sets every motif to 18rem (288px at the default root
+  size), independent of page width and shape. Three overlapping bands each
+  contain twelve strands with irregular offsets, horizontal drift, and
+  varying vertical scale. They gather, fan out, and cross instead of using
+  uniform parallel spacing. A stable section-id-derived phase shifts the
+  composition between sections without runtime randomness.
+  Their coordinates, 1-unit strokes, and transforms are original SVG
+  artwork, not UI spacing exceptions. Non-scaling strokes retain line weight.
+  The SVG preserves its proportions and crops centrally on narrow screens;
+  this deliberate decorative-art crop does not affect project media.
+  Header content has the same minimum height but can grow for wrapped or
+  enlarged text; the centered motif keeps its height and never clips copy.
+- Wave decoration is hidden from assistive technology, nonfocusable, and
+  pointer-transparent, with no animation under any motion preference.
+  Smaller subsection headings retain their neutral rule and dark-beige ink.
+  Labels, semantic heading levels, anchors, and spacing preserve structure.
+- Pages do not render back buttons. The brand links home; primary navigation
+  links to Other and About. Carousel controls retain simple line chevrons,
+  not painted marks.
+- Hero-first project introductions retain labeled, wrapping metadata pills
+  below the uncropped hero. Pills remain noninteractive list items. Standard
+  introductions and demonstration warnings are unchanged.
+
+## Media and interaction
+
+Project thumbnails always show complete images at grid-column width and
+natural height. Other media preserves natural composition unless the author
+explicitly selects a crop. Do not change source dimensions or re-encode
+approved images as part of styling.
+
+Carousels reserve the tallest slide's height. Each 48px button occupies a
+side rail with an 8px gap, intentionally trading some small-screen image
+width for unobstructed media and captions. Single-image and unenhanced
+galleries use the full width. Native scroll snap supports touch; buttons and
+keyboard move immediately. Counts are screen-reader-only. There is no
+autoplay; without JavaScript, the scrollable gallery remains accessible and
+nonfunctional controls stay hidden.
+
+Focus is visible and hover is never the only affordance. Reduced motion
+removes nonessential transitions and animations. Internal links and assets
+must work at both root and repository-subpath deployments.
 
 ## Enforcement
 
-`npm run lint` runs Stylelint over shared CSS and Astro styles, including strict token-value rules and native style checks. Inline component styles are reserved for validated CSS custom-property parameters (for example media ratio). SVG source artwork and document metadata are not UI styling. Automated checks complement, not replace, responsive and accessibility review.
+`npm run validate` checks formatting, Stylelint token rules, Astro/TypeScript,
+and focused tests, including measured palette contrast. Inline styles are
+reserved for validated custom-property parameters such as media ratio.
+SVG coordinates and stroke widths are artwork, not UI-scale exceptions.
+Responsive browser checks complement automated validation.
 
-See [Components](COMPONENTS.md) for APIs; update this guide whenever token meaning or responsive behavior changes.
+See [Components](COMPONENTS.md) for APIs.

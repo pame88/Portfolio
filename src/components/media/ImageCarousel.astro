@@ -1,0 +1,250 @@
+---
+import type { ImageMetadata } from "astro";
+import ResponsiveImage from "./ResponsiveImage.astro";
+
+interface Props {
+  id: string;
+  label: string;
+  slides: readonly {
+    src: ImageMetadata;
+    alt: string;
+    caption?: string;
+  }[];
+}
+
+const { id, label, slides } = Astro.props;
+if (slides.length === 0) {
+  throw new Error(`Image carousel "${label}" requires at least one slide.`);
+}
+---
+
+<image-carousel
+  role="region"
+  aria-roledescription="carousel"
+  aria-label={label}
+>
+  <div
+    class="carousel-track"
+    id={id}
+    role="group"
+    aria-label={`${label} images`}
+    tabindex="0"
+  >
+    {slides.map(({ src, alt, caption }, index) => (
+      <div
+        class="carousel-slide"
+        role="group"
+        aria-roledescription="slide"
+        aria-label={`${index + 1} of ${slides.length}`}
+      >
+        <ResponsiveImage src={src} alt={alt} caption={caption} />
+      </div>
+    ))}
+  </div>
+  <div class="carousel-controls" hidden>
+    <button
+      type="button"
+      data-previous
+      aria-controls={id}
+      aria-label="Previous image"
+      disabled
+    >
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="m15 5-7 7 7 7" stroke="currentColor" stroke-width="1.5" />
+      </svg>
+    </button>
+    <span class="carousel-status" aria-live="polite" aria-atomic="true">
+      1 of {slides.length}
+    </span>
+    <button type="button" data-next aria-controls={id} aria-label="Next image">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="m15 5-7 7 7 7" stroke="currentColor" stroke-width="1.5" />
+      </svg>
+    </button>
+  </div>
+</image-carousel>
+
+<style>
+  image-carousel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+  }
+  image-carousel.has-controls {
+    grid-template-columns: var(--space-12) minmax(0, 1fr) var(--space-12);
+    gap: var(--space-2);
+  }
+  .has-controls .carousel-track {
+    grid-column: 2;
+  }
+  .carousel-track {
+    grid-row: 1;
+    position: relative;
+    display: flex;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: auto;
+  }
+  .carousel-track::-webkit-scrollbar {
+    display: none;
+  }
+  .carousel-slide {
+    flex: 0 0 100%;
+    min-width: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .carousel-controls:not([hidden]) {
+    display: contents;
+  }
+  button {
+    display: grid;
+    place-items: center;
+    grid-row: 1;
+    align-self: center;
+    width: var(--space-12);
+    height: var(--space-12);
+    padding: var(--space-1);
+    border: none;
+    background-color: transparent;
+    color: var(--color-utility-blue);
+    transition: var(--transition-color);
+    cursor: pointer;
+  }
+  [data-previous] {
+    grid-column: 1;
+  }
+  [data-next] {
+    grid-column: 3;
+  }
+  button svg {
+    width: var(--space-8);
+    height: 100%;
+  }
+  [data-next] svg {
+    transform: scaleX(-1);
+  }
+  button:disabled {
+    color: var(--color-border);
+    cursor: default;
+  }
+  button:not(:disabled):hover,
+  button:not(:disabled):focus-visible {
+    color: var(--color-utility-blue-complement);
+  }
+  .carousel-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>
+
+<script>
+  class ImageCarousel extends HTMLElement {
+    private current = 0;
+    private observer?: ResizeObserver;
+    private elements?: {
+      track: HTMLDivElement;
+      slides: HTMLElement[];
+      previous: HTMLButtonElement;
+      next: HTMLButtonElement;
+      status: HTMLSpanElement;
+    };
+    private update = () => {
+      if (!this.elements) return;
+      const { track, slides, previous, next, status } = this.elements;
+      this.current = slides.reduce(
+        (nearest, slide, index) =>
+          Math.abs(slide.offsetLeft - track.scrollLeft) <
+          Math.abs(slides[nearest].offsetLeft - track.scrollLeft)
+            ? index
+            : nearest,
+        0,
+      );
+      previous.disabled = this.current === 0;
+      next.disabled = this.current === slides.length - 1;
+      const message = `${this.current + 1} of ${slides.length}`;
+      if (status.textContent !== message) status.textContent = message;
+    };
+    private goTo(index: number) {
+      if (!this.elements) return;
+      const { track, slides } = this.elements;
+      const target = slides[Math.max(0, Math.min(index, slides.length - 1))];
+      track.scrollLeft = target.offsetLeft;
+      this.update();
+    }
+    private previous = () => this.goTo(this.current - 1);
+    private next = () => this.goTo(this.current + 1);
+    private resize = () => this.goTo(this.current);
+    private keydown = (event: KeyboardEvent) => {
+      if (!this.elements || event.target !== this.elements.track) return;
+      let index: number;
+      switch (event.key) {
+        case "ArrowLeft":
+          index = this.current - 1;
+          break;
+        case "ArrowRight":
+          index = this.current + 1;
+          break;
+        case "Home":
+          index = 0;
+          break;
+        case "End":
+          index = this.elements.slides.length - 1;
+          break;
+        default:
+          return;
+      }
+      event.preventDefault();
+      this.goTo(index);
+    };
+    connectedCallback() {
+      const track = this.querySelector<HTMLDivElement>(".carousel-track");
+      const slides = Array.from(
+        this.querySelectorAll<HTMLElement>(".carousel-slide"),
+      );
+      const previous = this.querySelector<HTMLButtonElement>("[data-previous]");
+      const next = this.querySelector<HTMLButtonElement>("[data-next]");
+      const status = this.querySelector<HTMLSpanElement>("[aria-live]");
+      const controls = this.querySelector<HTMLDivElement>(".carousel-controls");
+      if (
+        !track ||
+        !slides.length ||
+        !previous ||
+        !next ||
+        !status ||
+        !controls
+      ) {
+        console.error("Image carousel markup is incomplete.", this);
+        return;
+      }
+      this.elements = { track, slides, previous, next, status };
+      previous.addEventListener("click", this.previous);
+      next.addEventListener("click", this.next);
+      track.addEventListener("scroll", this.update, { passive: true });
+      track.addEventListener("keydown", this.keydown);
+      this.observer = new ResizeObserver(this.resize);
+      this.observer.observe(track);
+      controls.hidden = slides.length < 2;
+      this.classList.toggle("has-controls", slides.length > 1);
+      this.update();
+    }
+    disconnectedCallback() {
+      if (this.elements) {
+        const { track, previous, next } = this.elements;
+        previous.removeEventListener("click", this.previous);
+        next.removeEventListener("click", this.next);
+        track.removeEventListener("scroll", this.update);
+        track.removeEventListener("keydown", this.keydown);
+      }
+      this.observer?.disconnect();
+      this.elements = undefined;
+    }
+  }
+  customElements.define("image-carousel", ImageCarousel);
+</script>

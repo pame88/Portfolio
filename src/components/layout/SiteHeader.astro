@@ -2,18 +2,17 @@
 import PageContainer from "./PageContainer.astro";
 import { sitePath } from "../../utils/routing";
 const links = [
-  { label: "Work", href: "/work/" },
-  { label: "Creative", href: "/creative/" },
+  { label: "Other", href: "/creative/" },
   { label: "About", href: "/about/" },
 ];
 const pathname = Astro.url.pathname;
 ---
 
-<header class="site-header">
+<header class="site-header color-pair color-pair--sky">
   <PageContainer>
     <div class="header-content">
       <a class="brand" href={sitePath("/")} aria-label="Portfolio home">
-        Portfolio<span class="brand-note type-label">Foundation</span>
+        Portfolio
       </a>
       <nav aria-label="Primary">
         <ul>
@@ -37,7 +36,6 @@ const pathname = Astro.url.pathname;
 
 <style>
   .site-header {
-    background-color: var(--color-surface);
     border-bottom: var(--border-rule);
   }
   .header-content {
@@ -52,27 +50,41 @@ const pathname = Astro.url.pathname;
   .brand {
     color: var(--color-text);
     text-decoration: none;
-    font-weight: var(--weight-medium);
+    font-family: var(--font-display);
+    font-size: var(--type-heading-s);
+    font-weight: var(--weight-regular);
   }
-  .brand-note {
-    display: block;
-    color: var(--color-muted);
+  .brand:hover,
+  .brand:focus-visible {
+    color: var(--color-text-complement);
+    text-decoration: underline;
   }
   ul {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-6);
+    gap: var(--space-2) var(--space-4);
     margin: 0;
     padding: 0;
     list-style: none;
   }
   nav a {
-    color: var(--color-secondary);
+    display: inline-block;
+    padding: var(--space-2) var(--space-1);
+    color: var(--color-accent);
+    font-family: var(--font-body);
+    font-size: var(--type-nav);
+    font-weight: var(--weight-regular);
+    line-height: var(--leading-body);
     text-decoration: none;
   }
-  nav a:hover,
   nav a[aria-current="page"] {
-    color: var(--color-accent);
+    color: var(--color-accent-hover);
+    text-decoration: underline;
+    text-underline-offset: var(--space-2);
+  }
+  nav a:hover,
+  nav a:focus-visible {
+    color: var(--color-accent-complement);
     text-decoration: underline;
   }
 </style>

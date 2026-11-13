@@ -1,6 +1,6 @@
 ---
 interface Props {
-  width?: "content" | "reading" | "wide" | "full";
+  width?: "content" | "full";
 }
 const { width = "content" } = Astro.props;
 ---
@@ -12,18 +12,10 @@ const { width = "content" } = Astro.props;
 <style>
   .container {
     width: 100%;
-    max-width: calc(var(--width-content) + var(--gutter-page) * 2);
     margin-inline: auto;
     padding-inline: var(--gutter-page);
   }
-  .container--reading {
-    max-width: calc(var(--width-reading) + var(--gutter-page) * 2);
-  }
-  .container--wide {
-    max-width: calc(var(--width-wide) + var(--gutter-page) * 2);
-  }
   .container--full {
-    max-width: none;
     padding-inline: 0;
   }
 </style>

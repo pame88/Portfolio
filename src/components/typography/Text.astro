@@ -3,10 +3,24 @@ interface Props {
   as?: "p" | "div";
   size?: "l" | "m" | "s";
   tone?: "primary" | "secondary";
+  variant?: "body" | "subtitle";
 }
-const { as: Tag = "p", size = "m", tone = "primary" } = Astro.props;
+const {
+  as: Tag = "p",
+  size = "m",
+  tone = "primary",
+  variant = "body",
+} = Astro.props;
 ---
 
-<Tag class:list={[`type-body-${size}`, { secondary: tone === "secondary" }]}>
+<Tag
+  class:list={[
+    `type-body-${size}`,
+    {
+      secondary: tone === "secondary",
+      "type-subtitle": variant === "subtitle",
+    },
+  ]}
+>
   <slot />
 </Tag>

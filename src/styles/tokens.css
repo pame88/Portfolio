@@ -1,6 +1,8 @@
 :root {
-  --font-body: Arial, Helvetica, sans-serif;
+  --font-body: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --font-display: Georgia, "Times New Roman", serif;
+  --font-graffiti: var(--font-display);
+  --font-spray: var(--font-body);
   --weight-regular: 400;
   --weight-medium: 600;
   --type-display: clamp(3rem, 7vw, 6.5rem);
@@ -8,14 +10,17 @@
   --type-heading-l: clamp(2rem, 3.5vw, 3rem);
   --type-heading-m: clamp(1.5rem, 2.5vw, 2rem);
   --type-heading-s: 1.25rem;
+  --type-graffiti: var(--type-heading-l);
+  --type-nav: 0.9375rem;
+  --type-paint-glyph: 100px;
   --type-body-l: clamp(1.125rem, 1.5vw, 1.375rem);
   --type-body-m: 1rem;
   --type-body-s: 0.875rem;
   --type-caption: 0.875rem;
   --type-label: 0.75rem;
-  --leading-display: 1.05;
+  --leading-display: 1.1;
   --leading-heading: 1.2;
-  --leading-body: 1.65;
+  --leading-body: 1.75;
   --leading-caption: 1.4;
   --tracking-display: -0.035em;
   --tracking-heading: -0.02em;
@@ -31,35 +36,81 @@
   --space-16: 4rem;
   --space-24: 6rem;
   --space-32: 8rem;
-  --width-reading: 44rem;
-  --width-content: 76rem;
-  --width-wide: 90rem;
+  --width-back-mark: clamp(5rem, 9vw, 7rem);
   --gutter-page: clamp(var(--space-6), 5vw, var(--space-16));
   --section-space: clamp(var(--space-12), 7vw, var(--space-24));
   --grid-gap: var(--space-8);
   --grid-columns-single: 1;
   --grid-columns-double: 2;
   --grid-columns-triple: 3;
-  --header-height: var(--space-24);
-  --color-page: #f5f3ed;
-  --color-surface: #dfe9e2;
-  --color-surface-warm: #e9dfcf;
-  --color-text: #293d46;
-  --color-secondary: #4e635e;
-  --color-muted: #506560;
-  --color-border: #c8bba6;
-  --color-accent: #3f6278;
-  --color-accent-hover: #2e4c60;
-  --color-focus: #3f6278;
+  --header-height: var(--space-16);
+  --height-section-wave: 18rem;
+  --color-grass-light: #dce5ca;
+  --color-grass-dark: #4e6046;
+  --color-sand-light: #f8f6f0;
+  --color-sand-dark: #74634b;
+  --color-sunset-pink: #efcdd2;
+  --color-horizon-purple: #5f5575;
+  --color-sky-light: #d7e8ee;
+  --color-ocean-dark: #40596c;
+  --color-page: var(--color-sand-light);
+  --color-surface: var(--color-sand-light);
+  --color-surface-warm: var(--color-grass-light);
+  --color-surface-blue: var(--color-sky-light);
+  --color-surface-pink: var(--color-sunset-pink);
+  --color-surface-violet: var(--color-grass-light);
+  --color-text: var(--color-ocean-dark);
+  --color-secondary: var(--color-ocean-dark);
+  --color-muted: var(--color-ocean-dark);
+  --color-border: var(--color-sand-dark);
+  --color-accent: var(--color-ocean-dark);
+  --color-accent-hover: var(--color-ocean-dark);
+  --color-focus: var(--color-ocean-dark);
+  --color-utility-blue: var(--color-ocean-dark);
+  --color-utility-orange: var(--color-ocean-dark);
+  --color-accent-complement: var(--color-ocean-dark);
+  --color-utility-blue-complement: var(--color-ocean-dark);
+  --color-utility-orange-complement: var(--color-ocean-dark);
+  --color-text-complement: var(--color-ocean-dark);
+  --color-paint-pink: var(--color-sunset-pink);
+  --color-paint-blue: var(--color-sky-light);
+  --color-paint-yellow: var(--color-sand-dark);
+  --color-paint-lime: var(--color-grass-light);
+  --color-paint-violet: var(--color-horizon-purple);
+  --paint-spectrum: linear-gradient(
+    100deg,
+    var(--color-paint-pink) 0% 24%,
+    var(--color-paint-yellow) 24% 43%,
+    var(--color-paint-blue) 43% 68%,
+    var(--color-paint-lime) 68% 84%,
+    var(--color-paint-violet) 84% 100%
+  );
+  --paint-edge: var(--space-1);
+  --art-height: 32rem;
+  --art-height-compact: 16rem;
+  --graffiti-tilt: -3deg;
+  --shadow-graffiti: 0.035em 0.035em 0 var(--color-paint-yellow);
+  --shadow-spray: 0 0 0.025em currentColor, 0.025em 0.025em 0.07em currentColor;
+  --texture-spray:
+    radial-gradient(circle at 8% 72%, currentColor 0 0.6px, transparent 1.2px),
+    radial-gradient(circle at 23% 12%, currentColor 0 0.8px, transparent 1.5px),
+    radial-gradient(circle at 42% 88%, currentColor 0 0.7px, transparent 1.4px),
+    radial-gradient(circle at 68% 8%, currentColor 0 0.6px, transparent 1.2px),
+    radial-gradient(circle at 85% 84%, currentColor 0 0.8px, transparent 1.5px),
+    radial-gradient(circle at 96% 28%, currentColor 0 0.7px, transparent 1.4px);
   --radius-none: 0;
   --radius-small: 0.25rem;
+  --radius-pill: 999px;
   --border-width: 1px;
   --border-rule: var(--border-width) solid var(--color-border);
   --focus-ring: 2px solid var(--color-focus);
   --focus-offset: var(--space-1);
-  --shadow-soft: 0 0.25rem 1rem rgb(41 61 70 / 8%);
+  --shadow-soft: none;
   --duration-fast: 160ms;
   --duration-normal: 240ms;
+  --duration-paint-stroke: 320ms;
+  --delay-paint-step: 240ms;
+  --delay-paint-start: 160ms;
   --ease-standard: cubic-bezier(0.2, 0, 0.2, 1);
   --transition-color: color var(--duration-fast) var(--ease-standard);
   --layer-header: 10;

@@ -1,6 +1,6 @@
 # Design & creative portfolio
 
-A static, editorial portfolio foundation built with Astro, TypeScript, typed MDX collections, and a shared CSS-token design system. Included content is explicitly labeled demonstration material, not real portfolio work.
+A static, editorial portfolio built with Astro, TypeScript, typed MDX collections, and a shared CSS-token design system. It includes an author-supplied Dragon Admin Center case study and a clearly labeled creative demonstration.
 
 ## Development
 

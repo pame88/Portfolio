@@ -2,11 +2,11 @@
 
 ## Product requirements
 
-A personal UX/product design and creative portfolio, hosted as a static GitHub Pages site. The direction is minimal, editorial, contemporary, typography-driven, image-forward, and bespoke rather than template-like. The coastal palette combines faded blues, sandy beige, sea-glass green, and weathered white through shared semantic tokens; pale surfaces are paired with readable darker text. Keep the work central; avoid generic SaaS decoration, unnecessary gradients, and unrelated aesthetic changes.
+A personal UX/product design and creative portfolio, hosted as a static GitHub Pages site. The direction is calm, simple, and image-forward, inspired by Cape Cod dunes and beach: four matched light-background/dark-ink pairs (beige, grass green, blue, and pink with blueish purple), Georgia serif titles, and clean system sans-serif body text. The page stays warm off-white, the header sky blue, and the footer dune green. System fonts require no font downloads or external services. Keep the work central; decorative paint and animated lettering are not part of the current composition.
 
 Priority order: visual quality, design consistency, composable components, creative layout flexibility, media presentation, responsiveness, performance/accessibility, maintainability. When uncertain: consistency > reuse > simplicity > convenience.
 
-Home introduces the portfolio and selected work; Work lists UX/product projects; Creative lists other creative practices; About provides background and contact once supplied. Project pages support both detailed narratives and image-first galleries. Real identity, contact information, assets, and achievements require author input.
+Home introduces the portfolio and selected work, including direct links to UX/product projects; the separate Work listing page is removed. Other lists creative practices, retaining the existing `/creative/` route and internal `creative` category for URL and content compatibility. About provides background and contact once supplied. Primary navigation contains Other and About; the Portfolio brand links home. No pages use back buttons. Project pages support both detailed narratives and image-first galleries. Real identity, contact information, assets, and achievements require author input.
 
 ## Foundation decisions
 

@@ -13,6 +13,7 @@ const projects = defineCollection({
       title: z.string().min(1),
       description: z.string().min(1),
       category: z.enum(["work", "creative"]),
+      introLayout: z.enum(["standard", "hero-first"]).default("standard"),
       thumbnail: z.object({ src: image(), alt: z.string().min(1) }),
       heroMedia: z
         .discriminatedUnion("type", [

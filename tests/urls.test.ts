@@ -5,8 +5,8 @@ import { hostingConfig, resolvePath } from "../src/utils/urls.ts";
 test("root, repository and custom-domain paths stay consistent", () => {
   for (const base of ["/", "/portfolio", "/portfolio/"]) {
     const config = hostingConfig("https://example.com", base);
-    const expected = base === "/" ? "/work/" : "/portfolio/work/";
-    assert.equal(resolvePath("/work/", config.base), expected);
+    const expected = base === "/" ? "/about/" : "/portfolio/about/";
+    assert.equal(resolvePath("/about/", config.base), expected);
     assert.equal(
       new URL(resolvePath("/media/clip.mp4", config.base), config.site)
         .pathname,
