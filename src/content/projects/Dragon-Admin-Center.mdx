@@ -2,6 +2,7 @@
 title: "Dragon Admin Center"
 description: "Designing the administration experience for Microsoft's clinical AI solutions, including Dragon Copilot."
 category: work
+year: "2022 - 2026"
 introLayout: hero-first
 thumbnail:
   src: "../../assets/DACScreens/DACSplash.png"
@@ -23,6 +24,8 @@ import Section from "../../components/layout/Section.astro";
 import ResponsiveImage from "../../components/media/ResponsiveImage.astro";
 import ImageCarousel from "../../components/media/ImageCarousel.astro";
 import SectionHeading from "../../components/typography/SectionHeading.astro";
+import FeatureHighlight from "../../components/portfolio/FeatureHighlight.astro";
+import FeatureHeading from "../../components/typography/FeatureHeading.astro";
 import {
   environmentSlides,
   organizationSlides,
@@ -34,6 +37,7 @@ import {
 <Section>
 
 <SectionHeading
+  slot="heading"
   id="product-overview"
   title="Product overview"
   label="01 / Overview"
@@ -86,24 +90,23 @@ Microsoft HLS products.
 </Section>
 
 <Section>
+  <SectionHeading
+    slot="heading"
+    id="the-design"
+    title="The design"
+    label="02 / Design"
+  />
   <div class="flow">
-
-    <SectionHeading
-      id="the-design"
-      title="The design"
-      label="02 / Design"
-    />
 
     I worked mainly with one other designer on Dragon Admin Center. Although
     many of the designs were collaborative, some feature designs were led by me,
     and I've included the ones I'm most proud of below.
 
-    <SectionHeading
+  </div>
+  <FeatureHighlight
       id="feature-highlight-environment-picker"
       title="Environment picker"
-      label="Feature 01"
-      as="h3"
-    />
+  >
 
     One simple but effective solution that I conceived was the environment
     picker. DAC allows multiple environments to be created, each containing a
@@ -118,15 +121,13 @@ Microsoft HLS products.
     - Quickly compare configurations between environments.
     - Quickly compare content between environments.
 
-    #### The solution
-
-  </div>
-  <ImageCarousel
-    id="environment-solution"
-    label="Environment picker solution"
-    slides={environmentSlides}
-  />
-  <div class="flow">
+    <ImageCarousel
+      slot="media"
+      id="environment-solution"
+      label="Environment picker solution"
+      slides={environmentSlides}
+    />
+    <div slot="solution">
 
     This solution facilitates easy comparison between environments, allowing the
     admin to navigate to the content they want to see and switch environments in
@@ -136,17 +137,17 @@ Microsoft HLS products.
     can't be replicated in a different environment, it reverts to the common
     root page.
 
-  </div>
+    </div>
+
+  </FeatureHighlight>
 </Section>
 
 <Section id="organization-hierarchy">
   <div class="flow">
 
-    <SectionHeading
+    <FeatureHeading
       id="feature-highlight-organization-hierarchy"
       title="Organization hierarchy"
-      label="Feature 02"
-      as="h3"
     />
 
     One of my largest and most important feature designs in DAC was the
@@ -165,8 +166,6 @@ Microsoft HLS products.
     - Search the structure and navigate clear results across all levels,
       including possible duplicates.
 
-    #### The solution
-
   </div>
   <ImageCarousel
     id="organization-solution"
@@ -178,11 +177,9 @@ Microsoft HLS products.
 <Section id="remove-user-data">
   <div class="flow">
 
-    <SectionHeading
+    <FeatureHeading
       id="feature-highlight-remove-user-data"
       title="Remove user data"
-      label="Feature 03"
-      as="h3"
     />
 
     An especially challenging feature to design was removing user data. To
@@ -200,8 +197,6 @@ Microsoft HLS products.
       crowding the UI.
     - Consider the asynchronous removal process: allow admins to run removals
       in the background, but display appropriate messaging when needed.
-
-    #### The solution
 
   </div>
   <ImageCarousel
@@ -225,11 +220,9 @@ Microsoft HLS products.
 <Section id="add-ehr-user-ids">
   <div class="flow">
 
-    <SectionHeading
+    <FeatureHeading
       id="feature-highlight-add-ehr-user-ids"
       title="Add EHR user IDs"
-      label="Feature 04"
-      as="h3"
     />
 
     Another feature I designed that required an innovative, custom solution was
@@ -242,8 +235,6 @@ Microsoft HLS products.
 
     - Add EHR IDs to existing users in bulk.
     - Modify the list before submitting: delete, add more, or edit.
-
-    #### The solution
 
     **New pattern:** Add new content to existing objects in bulk.
 
@@ -264,14 +255,14 @@ Microsoft HLS products.
 </Section>
 
 <Section>
+  <SectionHeading
+    slot="heading"
+    id="the-process"
+    title="The process"
+    label="03 / Process"
+    tone="violet"
+  />
   <div class="flow">
-
-    <SectionHeading
-      id="the-process"
-      title="The process"
-      label="03 / Process"
-      tone="violet"
-    />
 
     - Audit of Microsoft Admin Centers
     - Leveraging Microsoft Admin Design System

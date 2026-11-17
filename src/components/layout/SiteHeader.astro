@@ -8,11 +8,11 @@ const links = [
 const pathname = Astro.url.pathname;
 ---
 
-<header class="site-header color-pair color-pair--sky">
+<header class="site-header">
   <PageContainer>
     <div class="header-content">
-      <a class="brand" href={sitePath("/")} aria-label="Portfolio home">
-        Portfolio
+      <a class="brand" href={sitePath("/")} aria-label="Eamonn Burke home">
+        Eamonn Burke
       </a>
       <nav aria-label="Primary">
         <ul>
@@ -35,9 +35,6 @@ const pathname = Astro.url.pathname;
 </header>
 
 <style>
-  .site-header {
-    border-bottom: var(--border-rule);
-  }
   .header-content {
     min-height: var(--header-height);
     display: flex;
@@ -57,7 +54,6 @@ const pathname = Astro.url.pathname;
   .brand:hover,
   .brand:focus-visible {
     color: var(--color-text-complement);
-    text-decoration: underline;
   }
   ul {
     display: flex;
@@ -85,6 +81,6 @@ const pathname = Astro.url.pathname;
   nav a:hover,
   nav a:focus-visible {
     color: var(--color-accent-complement);
-    text-decoration: underline;
+    text-decoration: none;
   }
 </style>

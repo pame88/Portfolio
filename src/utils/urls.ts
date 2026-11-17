@@ -28,5 +28,6 @@ export function resolvePath(path: string, base: string): string {
       "Internal URLs must start with /; external URLs must use HTTP(S).",
     );
   }
-  return `${base.replace(/\/+$/, "")}${path}`;
+  const prefix = base.replace(/\/+$/, "");
+  return prefix && path.startsWith(`${prefix}/`) ? path : `${prefix}${path}`;
 }

@@ -1,0 +1,45 @@
+---
+title: "ReXplore"
+description: "A travel-planning experience informed by local recommendations."
+category: work
+year: "2023"
+introLayout: hero-first
+role: ["Product Designer", "UX Researcher"]
+tools: ["Figma"]
+tags: ["UX Design", "UX Research"]
+thumbnail:
+  src: "../../assets/ReXplore/ReXplore.png"
+  alt: "ReXplore project overview showing travel itinerary, forum, and destination screens alongside research methods and insights about local recommendations."
+heroMedia:
+  type: image
+  src: "../../assets/ReXplore/ReXplore.png"
+  alt: "ReXplore project overview showing travel itinerary, forum, and destination screens alongside research methods and insights about local recommendations."
+featured: true
+published: true
+order: 4
+---
+
+import Section from "../../components/layout/Section.astro";
+import ImageCarousel from "../../components/media/ImageCarousel.astro";
+import { rexploreProcessSlides } from "../rexplore-process";
+
+<Section>
+
+## Research process
+
+Browse the slides using the arrows or swipe. With the slides focused, use
+the arrow keys to navigate, Home for the first slide, or End for the last.
+These are static slides; links within the slides are not interactive.
+
+<ImageCarousel
+  id="rexplore-research-slides"
+  label="ReXplore research process"
+  slides={rexploreProcessSlides}
+/>
+
+<p class="type-caption">
+  Presentation template by Slidesgo, icons by Flaticon, and infographics and
+  images by Freepik.
+</p>
+
+</Section>

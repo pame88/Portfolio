@@ -1,4 +1,4 @@
-import environmentPicker from "../assets/dragon-admin-center/environment-picker.png";
+import environmentPicker from "../assets/DAC Documentation/Environment picker.png";
 import organizationTree from "../assets/DACScreens/OrgTree.png";
 import organizationSearch from "../assets/DACScreens/OrgTreeSearched.png";
 import addOrganizationUnit from "../assets/DACScreens/AddOrgUnit.png";
@@ -24,7 +24,7 @@ import accessibilityAnnotations from "../assets/dragon-admin-center/accessibilit
 export const environmentSlides = [
   {
     src: environmentPicker,
-    alt: "The environment picker opens above the Organization page with a scrollable list of environments.",
+    alt: "The environment picker lists Default, Production, and Test environments, with Default selected.",
   },
 ];
 

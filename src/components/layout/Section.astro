@@ -8,8 +8,9 @@ const { width = "content", id } = Astro.props;
 ---
 
 <section id={id} class="section">
+  <slot name="heading" />
   <PageContainer width={width}>
-    <div class="flow">
+    <div class:list={["flow", { "after-heading": Astro.slots.has("heading") }]}>
       <slot />
     </div>
   </PageContainer>
@@ -18,5 +19,8 @@ const { width = "content", id } = Astro.props;
 <style>
   .section {
     padding-block: var(--section-space);
+  }
+  .after-heading {
+    padding-block-start: var(--space-6);
   }
 </style>

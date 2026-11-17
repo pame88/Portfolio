@@ -30,7 +30,7 @@ retains its original colors and files; reference photographs are not published.
 | `--color-sand-dark`      | `#74634b` | Muted dark beige; subsection-header text and rules     |
 | `--color-sunset-pink`    | `#efcdd2` | Pastel sunset pink; available paired surface           |
 | `--color-horizon-purple` | `#5f5575` | Muted blueish purple; all text and controls on pink    |
-| `--color-sky-light`      | `#d7e8ee` | Pastel sky blue; site header and chapter wave lines    |
+| `--color-sky-light`      | `#d7e8ee` | Pastel sky blue; chapter wave lines                    |
 | `--color-ocean-dark`     | `#40596c` | Darker grayish-blue; body text, links, and site header |
 
 Semantic color roles alias these eight primitives rather than defining
@@ -56,8 +56,10 @@ Shared `.color-pair` styling with `--sand`, `--sky`, `--grass`, or `--sunset`
 modifiers sets both background
 and foreground together, including nested heading tones, secondary text,
 links, hover states, borders, and focus rings. Do not select ink independently
-from its surface. Hover retains the paired ink; underlines and focus outlines
-provide interaction feedback without crossing pairs or adding colors.
+from its surface. Hover retains the paired ink and never underlines text,
+including brand, navigation, project cards, and prose links. Prose links and
+the current-page navigation item remain underlined at rest for discoverability;
+keyboard focus retains a visible outline without adding colors.
 
 Existing tone names (`magenta`, `pink`, `orange`, `violet`) and complement
 tokens remain compatible with authored content. They now resolve to the
@@ -80,31 +82,50 @@ painted fonts or import the decorative greeting.
   `width="full"` explicitly removes padding. There is no centered max-width
   cap. Long desktop prose lines remain an intentional full-width tradeoff.
 - Section owns vertical rhythm. Heading and Text do not add section spacing.
-  Nested groups must not duplicate gutters.
+  Nested groups must not duplicate gutters. Section's optional named `heading`
+  slot sits outside its padded content container, providing an explicit
+  viewport-wide chapter-art region without viewport-unit breakouts or negative
+  margins. The body keeps its existing gutter and 24px post-heading gap.
 - Grids start at one column, become two at 48rem, and optionally three at
   72rem. Typography and gutters scale fluidly without page-specific breakpoints.
+- Homepage Selected work intentionally uses one project per row. At 48rem
+  and above, each row pairs equal-width image and details columns with a
+  48px gap; below that breakpoint, details follow the image. Rows have 64px
+  separation. Skills reuse the project-metadata pill styles; thumbnails
+  remain complete and uncropped. Other listings retain their grid layout.
 - Home uses the existing welcome phrase as static semantic text. There is no
   hero artwork, paint stripe, overspray, or entrance animation.
-- The header uses the pastel sky-blue surface while the page stays off-white.
+  No divider separates the welcome and selected-work sections; their shared
+  Section spacing remains unchanged.
+- The header has no background fill, allowing the off-white page canvas to show through.
+  Its text remains ocean blue, with no bottom border.
   Header navigation uses plain sans-serif links without spray texture or shadow, padded targets, visible
   focus, native wrapping, and an underline plus `aria-current` for the
-  current page. Its brand and links use ocean-blue ink in every state.
+  current page at rest, never on hover. The Eamonn Burke brand and links use
+  ocean-blue ink in every state; keyboard focus remains outlined.
   Footer uses a quiet dune-grass surface with matching dark-green copy and links.
 - Chapter headings retain their 24px text inset but replace filled panels
   with original SVG wave-line artwork behind the title. All use pale sky-blue
   lines and ocean-blue ink on the off-white canvas, an intentional exception
   to the former solid-panel treatment. Ink meets 4.5:1 on both the canvas and
-  the wave color. No additional shade or opacity blend is introduced.
+  the wave color. No additional shade or opacity blend is introduced. Their
+  full-width heading slot lets the artwork reach both viewport edges; an
+  internal PageContainer keeps labels and titles on the original alignment.
 - `--height-section-wave` sets every motif to 18rem (288px at the default root
-  size), independent of page width and shape. Three overlapping bands each
-  contain twelve strands with irregular offsets, horizontal drift, and
-  varying vertical scale. They gather, fan out, and cross instead of using
-  uniform parallel spacing. A stable section-id-derived phase shifts the
-  composition between sections without runtime randomness.
+  size), independent of page width and shape. Three overlapping bands,
+  displaced by one third of a wave cycle, maintain a relatively constant
+  vertical envelope across the width. Each contains twelve strands with
+  irregular offsets, subtle horizontal drift, and varying vertical scale.
+  They gather, fan out, and cross instead of using uniform parallel spacing.
+  A stable section-id-derived phase shifts the composition between sections
+  without runtime randomness.
   Their coordinates, 1-unit strokes, and transforms are original SVG
   artwork, not UI spacing exceptions. Non-scaling strokes retain line weight.
-  The SVG preserves its proportions and crops centrally on narrow screens;
-  this deliberate decorative-art crop does not affect project media.
+  `--width-section-wave` keeps the drawing at least 75rem wide: a clipped
+  viewport-wide art layer crops it centrally on narrow screens rather than
+  squeezing the waves. On larger screens only horizontal scale changes;
+  vertical scale remains fixed. This decorative-art crop does not affect
+  project media and cannot introduce horizontal page overflow.
   Header content has the same minimum height but can grow for wrapped or
   enlarged text; the centered motif keeps its height and never clips copy.
 - Wave decoration is hidden from assistive technology, nonfocusable, and
@@ -117,6 +138,14 @@ painted fonts or import the decorative greeting.
 - Hero-first project introductions retain labeled, wrapping metadata pills
   below the uncropped hero. Pills remain noninteractive list items. Standard
   introductions and demonstration warnings are unchanged.
+- At tablet widths and above, project introductions intentionally use 32px
+  section padding and a 32px hero gap instead of the larger chapter spacing.
+  Hero images are centered at their natural aspect ratio and capped by
+  `--height-project-hero` (55svh), keeping the navigation, title, description,
+  and complete hero visible together at typical desktop viewports such as
+  1280 x 720 and 1366 x 768. This is a display-size exception to full-width
+  project media, not a crop or source-resolution change. Mobile heroes,
+  body media, cards, and other sections retain their existing sizing.
 
 ## Media and interaction
 

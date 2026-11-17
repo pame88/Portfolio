@@ -21,18 +21,16 @@ const featured = (await publishedProjects()).filter(
       Hey, welcome in.
     </Heading>
   </Section>
-  <div class="rule">
-    <Section id="selected-work">
-      <Heading as="h2" variant="l">
-        Selected work
-      </Heading>
-      <Text tone="secondary" variant="subtitle">
-        A collection of product design and creative work. Demonstration projects
-        are labeled.
-      </Text>
-      <ProjectGrid projects={featured} />
-    </Section>
-  </div>
+  <Section id="selected-work">
+    <Heading as="h2" variant="l">
+      Selected work
+    </Heading>
+    <Text tone="secondary" variant="subtitle">
+      A collection of product design and creative work. Demonstration projects
+      are labeled.
+    </Text>
+    <ProjectGrid projects={featured} layout="rows" />
+  </Section>
   <div class="rule">
     <Section>
       <Heading as="h2" variant="m">

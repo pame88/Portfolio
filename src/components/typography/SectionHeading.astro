@@ -1,5 +1,6 @@
 ---
 import Heading from "./Heading.astro";
+import PageContainer from "../layout/PageContainer.astro";
 
 interface Props {
   id: string;
@@ -10,24 +11,23 @@ interface Props {
 }
 
 const { id, title, label, as = "h2", tone = "blue" } = Astro.props;
+const wavePath =
+  "M-1200 110 C-1100 -7 -1000 -7 -900 110 S-700 227 -600 110 S-400 -7 -300 110 S-100 227 0 110 S200 -7 300 110 S500 227 600 110 S800 -7 900 110 S1100 227 1200 110 S1400 -7 1500 110 S1700 227 1800 110 S2000 -7 2100 110 S2300 227 2400 110";
 const waveBands = [
   {
-    path: "M-120 94 C10 196 130 12 300 44 S510 204 690 128 S920 4 1080 66 S1280 208 1400 124",
-    drift: -0.8,
-    lift: 1.05,
-    bend: -0.0015,
+    phase: 0,
+    drift: -0.18,
+    bend: -0.0004,
   },
   {
-    path: "M-120 154 C40 20 180 190 350 144 S580 -12 760 74 S980 230 1140 132 S1320 22 1440 96",
-    drift: 0.6,
-    lift: 0.7,
-    bend: 0.001,
+    phase: 200,
+    drift: 0.14,
+    bend: 0.0003,
   },
   {
-    path: "M-120 34 C60 138 180 206 370 114 S610 18 790 158 S1050 184 1210 70 S1370 44 1450 124",
-    drift: -0.35,
-    lift: 0.85,
-    bend: -0.0007,
+    phase: 400,
+    drift: -0.1,
+    bend: -0.0002,
   },
 ];
 const waveOffsets = [0, 2, 5, 9, 14, 20, 27, 35, 44, 54, 65, 77];
@@ -50,45 +50,50 @@ const waveShift =
   ]}
 >
   {as === "h2" && (
-    <svg
-      class="chapter-wave"
-      viewBox="0 0 1200 288"
-      preserveAspectRatio="xMidYMid slice"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1"
-      aria-hidden="true"
-      focusable="false"
-    >
-      {waveBands.map(({ path, drift, lift, bend }) => (
-        <g>
-          {waveOffsets.map((offset) => (
-            <path
-              d={path}
-              transform={`translate(${waveShift + offset * drift} ${offset * lift}) scale(1 ${1 + offset * bend})`}
-              vector-effect="non-scaling-stroke"
-            />
-          ))}
-        </g>
-      ))}
-    </svg>
+    <div class="chapter-art">
+      <svg
+        class="chapter-wave"
+        viewBox="0 0 1200 288"
+        preserveAspectRatio="none"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1"
+        aria-hidden="true"
+        focusable="false"
+      >
+        {waveBands.map(({ phase, drift, bend }) => (
+          <g>
+            {waveOffsets.map((offset) => (
+              <path
+                d={wavePath}
+                transform={`translate(${waveShift + phase + offset * drift} ${offset}) scale(1 ${1 + offset * bend})`}
+                vector-effect="non-scaling-stroke"
+              />
+            ))}
+          </g>
+        ))}
+      </svg>
+    </div>
   )}
-  <div class="heading-copy">
-    <p class="type-label">{label}</p>
-    <Heading
-      as={as}
-      variant={as === "h2" ? "l" : "m"}
-      tone={tone === "pink" ? "magenta" : tone}
-    >
-      {title}
-    </Heading>
-  </div>
+  <PageContainer width={as === "h2" ? "content" : "full"}>
+    <div class="heading-copy">
+      <p class="type-label">{label}</p>
+      <Heading
+        as={as}
+        variant={as === "h2" ? "l" : "m"}
+        tone={tone === "pink" ? "magenta" : tone}
+      >
+        {title}
+      </Heading>
+    </div>
+  </PageContainer>
 </header>
 
 <style>
   .case-heading {
     position: relative;
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     padding-block-start: var(--space-8);
     border-block-start: var(--border-rule);
     scroll-margin-block-start: var(--space-8);
@@ -96,26 +101,39 @@ const waveShift =
   .case-heading--chapter {
     min-block-size: var(--height-section-wave);
     align-content: center;
-    padding: var(--space-6);
+    padding-block: var(--space-6);
     border: none;
     background-color: var(--color-page);
   }
-  .chapter-wave {
+  .chapter-art {
     position: absolute;
     inset-block-start: 50%;
     inset-inline-start: 0;
     width: 100%;
     height: var(--height-section-wave);
-    color: var(--color-sky-light);
+    overflow: hidden;
     transform: translateY(-50%);
     pointer-events: none;
+  }
+  .chapter-wave {
+    position: absolute;
+    inset-inline-start: 50%;
+    width: max(100%, var(--width-section-wave));
+    height: 100%;
+    color: var(--color-sky-light);
+    transform: translateX(-50%);
   }
   .heading-copy {
     position: relative;
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-3);
+  }
+  .case-heading--chapter .heading-copy {
+    padding-inline: var(--space-6);
   }
   p {
     color: var(--color-secondary);
+    overflow-wrap: anywhere;
   }
 </style>

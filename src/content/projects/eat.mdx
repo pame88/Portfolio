@@ -1,0 +1,61 @@
+---
+title: "eat!"
+description: "A restaurant discovery experience."
+category: work
+year: "2023"
+introLayout: hero-first
+role: ["Product Designer", "UX Researcher"]
+tools: ["Figma"]
+tags: ["UX Design", "UX Research", "Marketing"]
+thumbnail:
+  src: "../../assets/eat!/eatSplash.png"
+  alt: "Three phones showing eat!'s restaurant discovery feed, dining atmosphere details, and profile, surrounded by colorful food illustrations."
+heroMedia:
+  type: image
+  src: "../../assets/eat!/eatSplash.png"
+  alt: "Three phones showing eat!'s restaurant discovery feed, dining atmosphere details, and profile, surrounded by colorful food illustrations."
+featured: true
+published: true
+order: 3
+---
+
+import Section from "../../components/layout/Section.astro";
+import ImageCarousel from "../../components/media/ImageCarousel.astro";
+import VideoPlayer from "../../components/media/VideoPlayer.astro";
+import conceptVideo from "../../assets/eat!/Eat_FinalVideo_Compressed.mp4?url";
+import conceptPoster from "../../assets/eat!/presentation/slide-18.png";
+import { eatPresentationSlides } from "../eat-presentation";
+
+<Section>
+
+## Concept video
+
+<VideoPlayer
+  src={conceptVideo}
+  poster={conceptPoster}
+  label="eat! concept video"
+  showCaption={false}
+/>
+
+</Section>
+
+<Section>
+
+## Presentation
+
+Browse the slides using the arrows or swipe. With the slides focused, use
+the arrow keys to navigate, Home for the first slide, or End for the last.
+These are static slides; embedded media and animations are not played.
+
+<ImageCarousel
+  id="eat-presentation-slides"
+  label="eat! Presentation"
+  slides={eatPresentationSlides}
+/>
+
+<p class="type-caption">
+  Presentation template by Slidesgo, icons by Flaticon, infographics and images
+  by Freepik, and illustrations by Storyset.
+</p>
+
+</Section>

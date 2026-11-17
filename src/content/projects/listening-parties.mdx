@@ -1,0 +1,37 @@
+---
+title: "Listening Parties"
+description: "A shared music-listening experience."
+category: work
+year: "2023"
+introLayout: hero-first
+role: ["Product designer", "Developer"]
+tools: ["Figma", "React"]
+tags: ["UX/UI Design", "UI Development"]
+thumbnail:
+  src: "../../assets/ListeningParty/ListeningPartySplash2.png"
+  alt: "A laptop displaying a listening party with a shared music queue and group chat against an orange and pink background."
+heroMedia:
+  type: image
+  src: "../../assets/ListeningParty/ListeningPartySplash2.png"
+  alt: "A laptop displaying a listening party with a shared music queue and group chat against an orange and pink background."
+featured: true
+published: true
+order: 2
+---
+
+import Section from "../../components/layout/Section.astro";
+import VideoPlayer from "../../components/media/VideoPlayer.astro";
+import walkthroughVideo from "../../assets/ListeningParty/ListeningPartyVideo.mp4?url";
+import walkthroughPoster from "../../assets/ListeningParty/ListeningPartyVideo-poster.jpg";
+
+<Section>
+
+## Concept walkthrough
+
+<VideoPlayer
+  src={walkthroughVideo}
+  poster={walkthroughPoster}
+  label="Listening Parties concept walkthrough"
+/>
+
+</Section>

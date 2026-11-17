@@ -20,6 +20,18 @@ test("root, repository and custom-domain paths stay consistent", () => {
   assert.equal(resolvePath("#main-content", "/portfolio/"), "#main-content");
 });
 
+test("imported media URLs keep their existing deployment prefix", () => {
+  for (const base of ["/", "/portfolio", "/portfolio/"]) {
+    const config = hostingConfig("https://example.com", base);
+    const video = `${config.base}_astro/Eat_FinalVideo_Compressed.hash.mp4`;
+    assert.equal(resolvePath(video, config.base), video);
+  }
+  assert.equal(
+    resolvePath("/portfolio-other/clip.mp4", "/portfolio/"),
+    "/portfolio/portfolio-other/clip.mp4",
+  );
+});
+
 test("invalid hosting configuration and ambiguous internal URLs fail explicitly", () => {
   for (const origin of [
     "https://example.com/portfolio",

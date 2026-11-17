@@ -1,0 +1,30 @@
+---
+import FeatureHeading from "../typography/FeatureHeading.astro";
+
+interface Props {
+  id: string;
+  title: string;
+}
+
+const { id, title } = Astro.props;
+---
+
+<div class="feature-highlight">
+  <div class="feature-copy flow">
+    <FeatureHeading id={id} title={title} />
+    <slot />
+  </div>
+  <div class="feature-media">
+    <slot name="media" />
+  </div>
+  <div class="feature-solution flow">
+    <slot name="solution" />
+  </div>
+</div>
+
+<style>
+  .feature-media {
+    min-width: 0;
+    align-self: center;
+  }
+</style>

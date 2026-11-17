@@ -26,7 +26,7 @@ const {
 const socialImage = project.data.thumbnail.src;
 const heroFirst = introLayout === "hero-first";
 const metadata = [
-  { label: "Role", values: role ? [role] : [] },
+  { label: "Role", values: role },
   { label: "Timeline", values: timeline ? [timeline] : [] },
   { label: "Collaborators", values: collaborators },
   { label: "Tools", values: tools },
@@ -37,73 +37,75 @@ const pillGroups = [...metadata, { label: "Skills", values: tags }].filter(
 ---
 
 <BaseLayout title={title} description={description} image={socialImage.src}>
-  <Section>
-    {(!heroFirst || placeholder) && (
-      <p class="type-label eyebrow">
-        {placeholder ? "Placeholder project" : ""}
-        {!heroFirst && (
-          <>
-            {placeholder ? " / " : ""}
-            {category === "work" ? "UX & product design" : "Other project"}
-          </>
-        )}
-      </p>
-    )}
-    <Heading
-      as="h1"
-      variant="xl"
-      tone={category === "work" ? "blue" : "magenta"}
-    >
-      {title}
-    </Heading>
-    <Text size="l" tone="secondary" variant="subtitle">
-      {description}
-    </Text>
-    {!heroFirst && metadata.length > 0 && (
-      <dl>
-        {metadata.map(({ label, values }) => (
-          <div>
-            <dt class="type-label">{label}</dt>
-            <dd>{values.join(", ")}</dd>
-          </div>
-        ))}
-      </dl>
-    )}
-    {!heroFirst && tags.length > 0 && (
-      <p class="type-caption secondary">{tags.join(" / ")}</p>
-    )}
-    {heroMedia && (
-      <div class="hero-media">
-        {heroMedia.type === "image" ? (
-          <ResponsiveImage src={heroMedia.src} alt={heroMedia.alt} priority />
-        ) : (
-          <VideoPlayer
-            src={heroMedia.src}
-            poster={heroMedia.poster}
-            label={heroMedia.label}
-            captions={heroMedia.captions}
-            transcript={heroMedia.transcript}
-          />
-        )}
-      </div>
-    )}
-    {heroFirst && pillGroups.length > 0 && (
-      <dl class="project-details">
-        {pillGroups.map(({ label, values }) => (
-          <div>
-            <dt class="type-label">{label}</dt>
-            <dd>
-              <ul role="list">
-                {values.map((value) => (
-                  <li class="metadata-pill type-caption">{value}</li>
-                ))}
-              </ul>
-            </dd>
-          </div>
-        ))}
-      </dl>
-    )}
-  </Section>
+  <div class="project-intro">
+    <Section>
+      {(!heroFirst || placeholder) && (
+        <p class="type-label eyebrow">
+          {placeholder ? "Placeholder project" : ""}
+          {!heroFirst && (
+            <>
+              {placeholder ? " / " : ""}
+              {category === "work" ? "UX & product design" : "Other project"}
+            </>
+          )}
+        </p>
+      )}
+      <Heading
+        as="h1"
+        variant="xl"
+        tone={category === "work" ? "blue" : "magenta"}
+      >
+        {title}
+      </Heading>
+      <Text size="l" tone="secondary" variant="subtitle">
+        {description}
+      </Text>
+      {!heroFirst && metadata.length > 0 && (
+        <dl>
+          {metadata.map(({ label, values }) => (
+            <div>
+              <dt class="type-label">{label}</dt>
+              <dd>{values.join(", ")}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      {!heroFirst && tags.length > 0 && (
+        <p class="type-caption secondary">{tags.join(" / ")}</p>
+      )}
+      {heroMedia && (
+        <div class="hero-media">
+          {heroMedia.type === "image" ? (
+            <ResponsiveImage src={heroMedia.src} alt={heroMedia.alt} priority />
+          ) : (
+            <VideoPlayer
+              src={heroMedia.src}
+              poster={heroMedia.poster}
+              label={heroMedia.label}
+              captions={heroMedia.captions}
+              transcript={heroMedia.transcript}
+            />
+          )}
+        </div>
+      )}
+      {heroFirst && pillGroups.length > 0 && (
+        <dl class="project-details">
+          {pillGroups.map(({ label, values }) => (
+            <div>
+              <dt class="type-label">{label}</dt>
+              <dd>
+                <ul class="pill-list" role="list">
+                  {values.map((value) => (
+                    <li class="metadata-pill type-caption">{value}</li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )}
+    </Section>
+  </div>
   <div class="rule">
     <slot />
   </div>
@@ -129,20 +131,5 @@ const pillGroups = [...metadata, { label: "Skills", values: tags }].filter(
   }
   .project-details dd {
     margin-block-start: var(--space-2);
-  }
-  .project-details ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .metadata-pill {
-    padding: var(--space-1) var(--space-3);
-    border: var(--border-rule);
-    border-radius: var(--radius-pill);
-    background-color: var(--color-surface);
-    overflow-wrap: anywhere;
   }
 </style>

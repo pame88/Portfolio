@@ -1,0 +1,26 @@
+---
+import Heading from "./Heading.astro";
+
+interface Props {
+  id: string;
+  title: string;
+}
+
+const { id, title } = Astro.props;
+---
+
+<header id={id} class="feature-heading">
+  <p class="type-label">Feature highlight</p>
+  <Heading as="h3" variant="l">
+    {title}
+  </Heading>
+</header>
+
+<style>
+  .feature-heading {
+    display: grid;
+    gap: var(--space-3);
+    margin-block-end: var(--space-12);
+    scroll-margin-block-start: var(--space-8);
+  }
+</style>

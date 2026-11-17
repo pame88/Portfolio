@@ -44,7 +44,9 @@
   --grid-columns-double: 2;
   --grid-columns-triple: 3;
   --header-height: var(--space-16);
+  --height-project-hero: 55svh;
   --height-section-wave: 18rem;
+  --width-section-wave: 75rem;
   --color-grass-light: #dce5ca;
   --color-grass-dark: #4e6046;
   --color-sand-light: #f8f6f0;

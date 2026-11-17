@@ -38,7 +38,14 @@ const projects = defineCollection({
       placeholder: z.boolean().default(false),
       order: z.number().int().default(0),
       date: z.coerce.date().optional(),
-      role: z.string().optional(),
+      year: z
+        .string()
+        .regex(/^\d{4}( - \d{4})?$/, "Use YYYY or YYYY - YYYY.")
+        .optional(),
+      role: z
+        .union([z.string(), z.array(z.string())])
+        .transform((value) => (typeof value === "string" ? [value] : value))
+        .default([]),
       timeline: z.string().optional(),
       collaborators: z.array(z.string()).default([]),
       tools: z.array(z.string()).default([]),

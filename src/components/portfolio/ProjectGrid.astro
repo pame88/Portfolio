@@ -5,14 +5,23 @@ import Text from "../typography/Text.astro";
 interface Props {
   projects: CollectionEntry<"projects">[];
   columns?: 2 | 3;
+  layout?: "grid" | "rows";
 }
-const { projects, columns = 2 } = Astro.props;
+const { projects, columns = 2, layout = "grid" } = Astro.props;
 ---
 
 {projects.length > 0 ? (
-  <div class:list={["project-grid", { "project-grid--three": columns === 3 }]}>
+  <div
+    class:list={[
+      "project-grid",
+      {
+        "project-grid--three": columns === 3,
+        "project-grid--rows": layout === "rows",
+      },
+    ]}
+  >
     {projects.map((project) => (
-      <ProjectCard project={project} />
+      <ProjectCard project={project} layout={layout} />
     ))}
   </div>
 ) : (
