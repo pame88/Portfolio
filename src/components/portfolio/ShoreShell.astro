@@ -1,0 +1,69 @@
+---
+const drawings = {
+  scallop: {
+    outline:
+      "M47 88C34 84 15 69 12 50 9 35 17 24 29 26 33 12 47 10 57 19 67 8 81 12 85 26 100 22 111 34 107 51 103 69 85 83 72 88L72 96Q60 92 48 96Z",
+    detail:
+      "M48 87Q32 61 29 34M53 85Q42 55 44 24M59 85Q57 54 58 24M65 85Q74 55 80 33M70 87Q89 66 99 45M49 90Q60 85 71 90M23 45l3 8M35 29l2 8M70 23l-2 8M91 31l-4 7M19 58l5 8M95 60l-6 7",
+  },
+  spiral: {
+    outline:
+      "M102 58C104 35 85 16 61 16 34 16 14 38 16 65 18 89 39 104 64 101 85 99 102 81 102 58ZM95 75Q78 69 75 54C71 39 49 37 41 50 31 66 45 83 60 77 73 72 68 55 57 57 50 58 49 66 55 68",
+    detail:
+      "M25 42l13 7M39 25l9 15M57 18l1 18M77 21l-5 18M92 34l-12 9M101 51l-16 3M85 92l-9-13M64 101l-3-15M42 97l5-13M25 84l12-10M18 65l15-3",
+  },
+  whelk: {
+    outline:
+      "M22 105Q29 88 37 75C32 61 39 48 53 42L88 14Q97 16 95 26L81 58C89 76 75 95 58 89L22 105ZM40 75Q57 83 76 66M46 51Q65 58 79 48M56 40Q71 45 84 35M69 29l19 2M29 94l13-3",
+    detail:
+      "M47 58Q60 68 73 60M44 67l7 5M56 52l4 7M66 54l2 6M49 82l-5 11M59 87l-7 7M37 83l-5 9M63 37l4-7M78 26l4-5M75 41l4-5M84 59l-5 7",
+  },
+  clam: {
+    outline:
+      "M21 57C12 47 15 33 28 31 29 17 44 17 50 24 58 11 72 15 76 27 91 23 104 35 99 48L89 59M21 63Q60 47 98 62C105 73 96 87 85 84 79 99 65 96 59 91 46 102 31 95 30 85 17 86 12 72 21 63ZM22 63Q59 88 98 62M49 61C48 45 72 44 73 59 74 75 50 77 49 61Z",
+    detail:
+      "M27 37l16 15M39 25l10 23M57 23l2 20M73 31l-5 15M89 37l-12 14M26 73l7 3M39 82l5 6M78 82l-4 6M88 72l-5 4M52 56l-1 4M60 51l4 1",
+  },
+  cockle: {
+    outline:
+      "M27 92C17 84 12 65 19 53 14 40 26 29 37 31 40 17 55 14 65 22 78 15 92 24 92 36 107 39 110 54 102 64 111 78 100 94 87 92 72 106 48 103 27 92Z",
+    detail:
+      "M29 91Q26 57 36 36M32 91Q40 50 51 26M36 93Q54 52 65 27M42 94Q69 61 86 39M47 96Q79 75 98 61M54 98Q79 90 91 89M22 58l2-7M28 42l4-6M49 23l5-1M78 24l5 3M101 47l1 6M102 76l-3 6",
+  },
+};
+
+interface Props {
+  variant: keyof typeof drawings;
+}
+
+const { variant } = Astro.props;
+const drawing = drawings[variant];
+---
+
+<svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+  <path class="outline" d={drawing.outline} />
+  <path class="detail" d={drawing.detail} />
+</svg>
+
+<style>
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform-origin: center;
+  }
+  path {
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+  .outline {
+    stroke-width: 2.2;
+  }
+  .detail {
+    stroke-width: 1.25;
+    opacity: 0.9;
+  }
+</style>

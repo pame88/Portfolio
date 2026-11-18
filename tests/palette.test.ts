@@ -20,7 +20,11 @@ function resolveColor(name: string, visited = new Set<string>()): string {
 }
 
 function luminance(name: string) {
-  const hex = resolveColor(name).slice(1);
+  return hexLuminance(resolveColor(name));
+}
+
+function hexLuminance(color: string) {
+  const hex = color.slice(1);
   const channels = [0, 2, 4].map((offset) => {
     const channel = parseInt(hex.slice(offset, offset + 2), 16) / 255;
     return channel <= 0.04045
@@ -30,12 +34,28 @@ function luminance(name: string) {
   return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
 }
 
-test("all interface color roles resolve to exactly eight shared colors", () => {
+test("base interface color roles resolve to exactly eight shared colors", () => {
   const names = [...tokens.matchAll(/--color-([\w-]+):/g)].map(
     (match) => match[1],
   );
-  const colors = new Set(names.map((name) => resolveColor(name).toLowerCase()));
+  const colors = new Set(
+    names
+      .filter((name) => name !== "on-tide")
+      .map((name) => resolveColor(name).toLowerCase()),
+  );
   assert.equal(colors.size, 8);
+});
+
+test("white tide header ink remains legible on both supported dark water bands", () => {
+  for (const band of ["water", "deep"]) {
+    const match = tokens.match(
+      new RegExp(`--art-tide-${band}:\\s*(#[\\da-f]{6});`, "i"),
+    );
+    assert.ok(match);
+    const ratio =
+      (luminance("on-tide") + 0.05) / (hexLuminance(match[1]) + 0.05);
+    assert.ok(ratio >= 4.5, `Tide header on ${band}: ${ratio.toFixed(2)}:1`);
+  }
 });
 
 test("body text and focus remain accessible on off-white surfaces", () => {

@@ -4,6 +4,7 @@ import Section from "../components/layout/Section.astro";
 import Heading from "../components/typography/Heading.astro";
 import Text from "../components/typography/Text.astro";
 import ProjectGrid from "../components/portfolio/ProjectGrid.astro";
+import TideGreeting from "../components/portfolio/TideGreeting.astro";
 import { publishedProjects } from "../utils/projects";
 import { sitePath } from "../utils/routing";
 const featured = (await publishedProjects()).filter(
@@ -15,12 +16,13 @@ const featured = (await publishedProjects()).filter(
   title="Design & creative work"
   description="A portfolio of UX, product design, and creative projects. Demonstration content is clearly labeled."
 >
-  <Section>
-    <p class="type-label eyebrow">Design &amp; creative work</p>
-    <Heading as="h1" variant="display">
-      Hey, welcome in.
-    </Heading>
-  </Section>
+  <TideGreeting
+    greetings={[
+      "Hey, welcome in.",
+      "Glad you washed up here.",
+      "I'm Eamonn, a UX Designer",
+    ]}
+  />
   <Section id="selected-work">
     <Heading as="h2" variant="l">
       Selected work

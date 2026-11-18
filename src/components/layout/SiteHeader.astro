@@ -35,6 +35,16 @@ const pathname = Astro.url.pathname;
 </header>
 
 <style>
+  .site-header[data-tide-active] {
+    position: relative;
+    z-index: calc(var(--layer-overlay) + 1);
+  }
+  .site-header[data-tide-active] a {
+    transition: none;
+  }
+  .site-header a[data-tide-washed] {
+    color: var(--color-on-tide);
+  }
   .header-content {
     min-height: var(--header-height);
     display: flex;

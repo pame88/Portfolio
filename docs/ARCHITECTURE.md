@@ -4,6 +4,39 @@
 
 A personal UX/product design and creative portfolio, hosted as a static GitHub Pages site. The direction is calm, simple, and image-forward, inspired by Cape Cod dunes and beach: four matched light-background/dark-ink pairs (beige, grass green, blue, and pink with blueish purple), Georgia serif titles, and clean system sans-serif body text. The page stays warm off-white, the header has no background fill, and the footer stays dune green. System fonts require no font downloads or external services. Keep the work central; decorative paint and animated lettering are not part of the current composition.
 
+The homepage's TideGreeting is an intentional motion exception: an original
+nine-band SVG wave covers and reveals approved HTML greetings on a five-second cadence,
+leaving scattered bold line-drawn shells behind. The greeting is centered within
+the introduction; varied shell sizes and inks occupy reserved space above and
+below it, with a new count of one to five and fresh randomized positions and
+rotations under each wash. Arrival slows into a continuously advancing turnaround
+instead of holding at full coverage, then immediately reverses into withdrawal;
+the complete 3800ms wash retains its five-second start-to-start cadence.
+A faster 1080ms arrival leaves 2720ms for the longest, gently eased retreat.
+Original ShoreShell SVGs evoke the
+owner's embroidery-style reference without embedding it. A native custom element and Web Animations API
+coordinate the sequence without React, dependencies, or animation media files.
+During each wash, an active-only frame loop evolves smooth layered contours
+from the pure `tideWavePaths` helper. A separate foam layer follows the incoming
+edge, then trails behind and dissolves in patches while water recedes in one
+continuous motion. Each water band has its own matching solid fill and retreat:
+dark layers withdraw faster, while the three lightest layers trail and fade.
+The original SVG artwork uses the owner's
+darker blue reference, extending through pale blue to a white leading edge,
+with wider band separation, without changing interface color roles.
+The effect is isolated to the homepage, stops above Selected work, and provides
+Escape-to-stop and reduced-motion behavior without visible animation controls
+or an introductory eyebrow. The rotating greeting uses an intentional sand-writing
+treatment: local cursive fonts and a static SVG filter modeling rough raised
+banks, grain, and recessed shadows on semantic HTML. The existing sand pair
+supplies the canvas-matched outer bank and lighter, dark-sand interior;
+grain shading is subtle, and dark-sand ink remains the unfiltered fallback.
+No font or image asset is added.
+Letterforms themselves are not animated.
+The real header remains above the water and clickable during washes, with
+temporary white ink on links covered by dark water; header state is reset
+whenever the cycle completes or is interrupted.
+
 Priority order: visual quality, design consistency, composable components, creative layout flexibility, media presentation, responsiveness, performance/accessibility, maintainability. When uncertain: consistency > reuse > simplicity > convenience.
 
 Home introduces the portfolio and selected work, including direct links to UX/product projects; the separate Work listing page is removed. Other lists creative practices, retaining the existing `/creative/` route and internal `creative` category for URL and content compatibility. About provides background and contact once supplied. Primary navigation contains Other and About; the Eamonn Burke brand links home, and document titles use the same author-supplied name. No pages use back buttons. Project pages support both detailed narratives and image-first galleries. Further identity details, contact information, assets, and achievements require author input.

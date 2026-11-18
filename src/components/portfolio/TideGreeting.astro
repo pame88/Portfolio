@@ -1,0 +1,754 @@
+---
+import Section from "../layout/Section.astro";
+import Heading from "../typography/Heading.astro";
+import ShoreShell from "./ShoreShell.astro";
+import { tideFoamPaths, tideWavePaths } from "../../utils/tide-wave";
+
+interface Props {
+  greetings: readonly [string, string, ...string[]];
+}
+
+const { greetings } = Astro.props;
+const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
+---
+
+<tide-greeting>
+  <svg class="tide-texture" aria-hidden="true" focusable="false">
+    <defs>
+      <filter
+        id="tide-sand-grain"
+        x="-5%"
+        y="-10%"
+        width="110%"
+        height="120%"
+        color-interpolation-filters="sRGB"
+      >
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.65"
+          numOctaves="3"
+          seed="8"
+          result="grain"
+        />
+        <feDisplacementMap
+          in="SourceGraphic"
+          in2="grain"
+          scale="2.4"
+          xChannelSelector="R"
+          yChannelSelector="G"
+          result="groove"
+        />
+        <feMorphology
+          in="groove"
+          operator="dilate"
+          radius="1.8"
+          result="bank"
+        />
+        <feFlood class="sand-ridge" result="ridge-color" />
+        <feComposite in="ridge-color" in2="bank" operator="in" result="ridge" />
+        <feDiffuseLighting
+          class="sand-light"
+          in="grain"
+          surfaceScale="1.6"
+          diffuseConstant="1"
+          result="grain-light"
+        >
+          <feDistantLight azimuth="225" elevation="45" />
+        </feDiffuseLighting>
+        <feComposite
+          in="grain-light"
+          in2="groove"
+          operator="in"
+          result="grit"
+        />
+        <feComposite
+          in="groove"
+          in2="grit"
+          operator="arithmetic"
+          k1="0.15"
+          k2="0.85"
+          k3="0"
+          k4="0"
+          result="groove-grit"
+        />
+        <feOffset in="groove" dx="0.7" dy="1.7" result="lower-edge" />
+        <feComposite
+          in="groove"
+          in2="lower-edge"
+          operator="out"
+          result="inner-edge"
+        />
+        <feFlood class="sand-groove" result="shadow-color" />
+        <feComposite
+          in="shadow-color"
+          in2="inner-edge"
+          operator="in"
+          result="shadow"
+        />
+        <feMerge>
+          <feMergeNode in="ridge" />
+          <feMergeNode in="groove-grit" />
+          <feMergeNode in="shadow" />
+        </feMerge>
+      </filter>
+    </defs>
+  </svg>
+  <p class="tide-help">
+    Decorative waves repeat every five seconds. Press Escape to stop them.
+  </p>
+  <Section>
+    <div class="tide-intro">
+      <Heading as="h1" variant="display">
+        <span class="tide-greetings">
+          {greetings.map((greeting, index) => (
+            <span
+              class="tide-greeting"
+              aria-hidden={index !== 0 ? "true" : undefined}
+            >
+              {greeting}
+            </span>
+          ))}
+        </span>
+      </Heading>
+      <div class="tide-shore" aria-hidden="true">
+        {shells.map((variant) => (
+          <span class="tide-shell">
+            <ShoreShell variant={variant} />
+          </span>
+        ))}
+      </div>
+    </div>
+  </Section>
+  <div class="tide-overlay" aria-hidden="true" hidden>
+    <div class="tide-water">
+      {tideWavePaths(0).map((path) => (
+        <div class="tide-layer">
+          <svg
+            class="tide-edge"
+            viewBox="0 0 1600 720"
+            preserveAspectRatio="none"
+          >
+            <path class="tide-band" d={path} />
+          </svg>
+          <div class="tide-sheet"></div>
+        </div>
+      ))}
+    </div>
+    <div class="tide-spindrift">
+      <svg class="tide-edge" viewBox="0 0 1600 720" preserveAspectRatio="none">
+        {tideFoamPaths(0).map((path) => (
+          <path class="tide-foam-patch" d={path} />
+        ))}
+      </svg>
+    </div>
+  </div>
+</tide-greeting>
+
+<style>
+  tide-greeting {
+    display: block;
+  }
+  .tide-texture {
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+  .tide-help {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .tide-intro {
+    position: relative;
+    padding-block: var(--space-24);
+  }
+  .tide-greetings {
+    display: grid;
+    align-items: center;
+    text-align: center;
+    color: var(--color-sand-dark);
+    font-family: var(--font-tide-writing);
+    line-height: var(--leading-body);
+    letter-spacing: var(--tracking-body);
+  }
+  .tide-greeting {
+    grid-area: 1 / 1;
+    filter: url("#tide-sand-grain");
+  }
+  .sand-ridge {
+    flood-color: var(--color-sand-light);
+  }
+  .sand-groove {
+    flood-color: var(--color-sand-dark);
+  }
+  .sand-light {
+    lighting-color: var(--color-sand-light);
+  }
+  .tide-greeting[aria-hidden="true"] {
+    visibility: hidden;
+  }
+  .tide-shore {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .tide-shell {
+    --shell-size: calc(
+      clamp(var(--space-12), 7vw, var(--space-16)) * var(--shell-scale, 1)
+    );
+
+    position: absolute;
+    width: var(--shell-size);
+    height: var(--shell-size);
+    top: var(--shell-y, var(--space-12));
+    left: var(--shell-x, 15%);
+    color: var(--color-horizon-purple);
+    transform: translate(-50%, -50%) rotate(var(--shell-rotation, -18deg));
+  }
+  .tide-shell:nth-child(2) {
+    --shell-scale: 0.65;
+    --shell-y: calc(100% - var(--space-12));
+    --shell-x: 35%;
+    --shell-rotation: 16deg;
+
+    color: var(--color-sand-dark);
+  }
+  .tide-shell:nth-child(3) {
+    --shell-scale: 0.85;
+    --shell-x: 50%;
+    --shell-rotation: -10deg;
+
+    color: var(--color-ocean-dark);
+  }
+  .tide-shell:nth-child(4) {
+    --shell-scale: 0.75;
+    --shell-y: calc(100% - var(--space-12));
+    --shell-x: 70%;
+    --shell-rotation: 12deg;
+
+    color: var(--color-grass-dark);
+  }
+  .tide-shell:nth-child(5) {
+    --shell-scale: 0.95;
+    --shell-x: 85%;
+    --shell-rotation: -22deg;
+
+    color: var(--color-sand-dark);
+  }
+  .tide-overlay {
+    position: absolute;
+    inset: 0 0 auto;
+    height: var(--tide-height, 0px);
+    overflow: clip;
+    pointer-events: none;
+    z-index: var(--layer-overlay);
+  }
+  .tide-water,
+  .tide-spindrift {
+    position: absolute;
+    inset: 0;
+    transform: translateY(-110%);
+  }
+  .tide-sheet {
+    position: absolute;
+    inset: 0 0 calc(var(--height-tide-edge) - 1px);
+    background-color: var(--tide-fill);
+  }
+  .tide-layer {
+    position: absolute;
+    inset: 0;
+  }
+  .tide-edge {
+    position: absolute;
+    inset-inline-start: 50%;
+    bottom: 0;
+    width: max(100%, var(--width-section-wave));
+    height: var(--height-tide-edge);
+    transform: translateX(-50%);
+  }
+  .tide-band {
+    fill: var(--tide-fill);
+  }
+  .tide-layer:nth-child(1) {
+    --tide-fill: var(--art-tide-foam);
+  }
+  .tide-layer:nth-child(2) {
+    --tide-fill: var(--art-tide-pearl);
+  }
+  .tide-layer:nth-child(3) {
+    --tide-fill: var(--art-tide-mist);
+  }
+  .tide-layer:nth-child(4) {
+    --tide-fill: var(--art-tide-wash);
+  }
+  .tide-layer:nth-child(5) {
+    --tide-fill: var(--art-tide-shallow);
+  }
+  .tide-layer:nth-child(6) {
+    --tide-fill: var(--art-tide-current);
+  }
+  .tide-layer:nth-child(7) {
+    --tide-fill: var(--art-tide-swell);
+  }
+  .tide-layer:nth-child(8) {
+    --tide-fill: var(--art-tide-water);
+  }
+  .tide-layer:nth-child(9) {
+    --tide-fill: var(--art-tide-deep);
+  }
+  .tide-foam-patch {
+    fill: var(--art-tide-foam);
+  }
+</style>
+
+<script>
+  import {
+    tideFoamPaths,
+    tideTimeMilliseconds,
+    tideWavePaths,
+  } from "../../utils/tide-wave";
+
+  class TideGreeting extends HTMLElement {
+    private preference = matchMedia("(prefers-reduced-motion: reduce)");
+    private observer?: IntersectionObserver;
+    private timer?: number;
+    private frame?: number;
+    private animations: Animation[] = [];
+    private visible = false;
+    private paused = false;
+    private active = false;
+    private arriving = false;
+    private current = 0;
+    private next = 0;
+    private interval = 0;
+    private duration = 0;
+    private turnDuration = 0;
+    private shellDuration = 0;
+    private shellCount = 0;
+    private easing = "";
+    private arrivalEasing = "";
+    private retreatEasing = "";
+    private elements?: {
+      greetings: HTMLSpanElement[];
+      shells: SVGSVGElement[];
+      shore: HTMLDivElement;
+      heading: HTMLHeadingElement;
+      overlay: HTMLDivElement;
+      water: HTMLDivElement;
+      layers: HTMLDivElement[];
+      sheets: HTMLDivElement[];
+      bands: SVGPathElement[];
+      spindrift: HTMLDivElement;
+      foam: SVGPathElement[];
+      boundary: HTMLElement;
+      header: HTMLElement;
+      headerLinks: HTMLAnchorElement[];
+    };
+
+    private showGreeting(index: number) {
+      this.elements?.greetings.forEach((greeting, position) => {
+        if (position === index) greeting.removeAttribute("aria-hidden");
+        else greeting.setAttribute("aria-hidden", "true");
+      });
+      this.current = index;
+    }
+
+    private scatterShells(changeCount = false) {
+      if (!this.elements) return;
+      const { shore, heading } = this.elements;
+      const bounds = shore.getBoundingClientRect();
+      const title = heading.getBoundingClientRect();
+      const allShells = Array.from(
+        shore.querySelectorAll<HTMLSpanElement>(".tide-shell"),
+      );
+      if (changeCount || this.shellCount === 0) {
+        const counts = allShells
+          .map((_, index) => index + 1)
+          .filter((count) => count !== this.shellCount);
+        this.shellCount = counts[Math.floor(Math.random() * counts.length)];
+      }
+      allShells.forEach((shell, index) => {
+        shell.hidden = index >= this.shellCount;
+      });
+      const shells = allShells.slice(0, this.shellCount);
+      const slots = shells.map((_, index) => index);
+      for (let index = slots.length - 1; index > 0; index--) {
+        const other = Math.floor(Math.random() * (index + 1));
+        [slots[index], slots[other]] = [slots[other], slots[index]];
+      }
+      const upperFirst = Math.random() < 0.5;
+      shells.forEach((shell, index) => {
+        const rotation = Math.random() * 44 - 22;
+        const angle = (rotation * Math.PI) / 180;
+        const radius =
+          (shell.offsetWidth *
+            (Math.abs(Math.cos(angle)) + Math.abs(Math.sin(angle)))) /
+          2;
+        const inset = radius + 4;
+        const slot = slots[index];
+        const firstBand = slot % 2 === 0;
+        const bandCount = firstBand
+          ? Math.ceil(shells.length / 2)
+          : Math.floor(shells.length / 2);
+        const slotWidth = bounds.width / bandCount;
+        const x =
+          Math.floor(slot / 2) * slotWidth +
+          inset +
+          Math.random() * (slotWidth - 2 * inset);
+        const upper = firstBand === upperFirst;
+        const start = upper ? 0 : title.bottom - bounds.top;
+        const end = upper ? title.top - bounds.top : bounds.height;
+        const y = start + inset + Math.random() * (end - start - 2 * inset);
+        shell.style.setProperty("--shell-x", `${(x / bounds.width) * 100}%`);
+        shell.style.setProperty("--shell-y", `${(y / bounds.height) * 100}%`);
+        shell.style.setProperty("--shell-rotation", `${rotation}deg`);
+      });
+    }
+
+    private canPlay() {
+      return (
+        this.isConnected &&
+        this.visible &&
+        !this.paused &&
+        !this.preference.matches &&
+        document.visibilityState === "visible" &&
+        window.scrollY < 1 &&
+        !this.elements?.header.contains(document.activeElement) &&
+        document.getSelection()?.isCollapsed !== false
+      );
+    }
+
+    private complete = () => {
+      if (!this.active || !this.elements) return;
+      if (this.frame !== undefined) window.cancelAnimationFrame(this.frame);
+      this.showGreeting(this.next);
+      this.animations.forEach((animation) => {
+        animation.onfinish = null;
+        animation.cancel();
+      });
+      this.animations = [];
+      this.elements.overlay.hidden = true;
+      this.elements.header.removeAttribute("data-tide-active");
+      this.elements.headerLinks.forEach((link) =>
+        link.removeAttribute("data-tide-washed"),
+      );
+      this.active = false;
+      this.arriving = false;
+    };
+
+    private syncHeader() {
+      if (!this.elements) return;
+      const { bands, sheets, headerLinks } = this.elements;
+      const darkWater = bands.slice(-2).map((band, index) => {
+        const matrix = band.getScreenCTM();
+        if (!matrix) {
+          throw new Error(
+            "The homepage tide requires visible SVG water layers.",
+          );
+        }
+        return {
+          band,
+          inverse: matrix.inverse(),
+          solid: sheets[bands.length - 2 + index].getBoundingClientRect(),
+        };
+      });
+      headerLinks.forEach((link) => {
+        const bounds = link.getBoundingClientRect();
+        const y = bounds.top + bounds.height / 2;
+        const washed = [
+          bounds.left,
+          bounds.left + bounds.width / 2,
+          bounds.right,
+        ].every((x) =>
+          darkWater.some(
+            ({ band, inverse, solid }) =>
+              (x >= solid.left &&
+                x <= solid.right &&
+                y >= solid.top &&
+                y <= solid.bottom) ||
+              band.isPointInFill(new DOMPoint(x, y).matrixTransform(inverse)),
+          ),
+        );
+        link.toggleAttribute("data-tide-washed", washed);
+      });
+    }
+
+    private undulate = (time: number) => {
+      if (!this.active || !this.elements) return;
+      const paths = tideWavePaths(time / 1000);
+      this.elements.bands.forEach((band, index) => {
+        band.setAttribute("d", paths[index]);
+      });
+      if (this.arriving) {
+        const foam = tideFoamPaths(time / 1000);
+        this.elements.foam.forEach((patch, index) => {
+          patch.setAttribute("d", foam[index]);
+        });
+      }
+      this.syncHeader();
+      this.frame = requestAnimationFrame(this.undulate);
+    };
+
+    private play() {
+      if (!this.elements || !this.canPlay() || this.active) return;
+      const {
+        greetings,
+        overlay,
+        water,
+        layers,
+        boundary,
+        shells,
+        spindrift,
+        foam,
+      } = this.elements;
+      const height = boundary.getBoundingClientRect().top + window.scrollY;
+      if (height <= 0) {
+        throw new Error(
+          "The homepage tide requires a visible Selected work boundary.",
+        );
+      }
+      overlay.style.setProperty("--tide-height", `${height}px`);
+      overlay.hidden = false;
+      this.elements.header.setAttribute("data-tide-active", "");
+      this.active = true;
+      this.arriving = true;
+      this.undulate(performance.now());
+      this.next = (this.current + 1) % greetings.length;
+      const arrival = [
+        { transform: "translateY(-110%)", easing: this.arrivalEasing },
+        { transform: "translateY(0)" },
+      ];
+      const arrivalTiming: KeyframeAnimationOptions = {
+        duration: this.duration * 0.2 + this.turnDuration,
+        fill: "both",
+      };
+      const wave = water.animate(arrival, arrivalTiming);
+      const foamArrival = spindrift.animate(arrival, arrivalTiming);
+      wave.onfinish = () => {
+        this.arriving = false;
+        this.showGreeting(this.next);
+        this.scatterShells(true);
+        const retreats = layers.map((layer, index) =>
+          layer.animate(
+            [
+              { transform: "translateY(0)", opacity: 1 },
+              {
+                transform: "translateY(-110%)",
+                opacity: index < 3 ? 0 : 1,
+              },
+            ],
+            {
+              duration:
+                this.duration * (0.8 - (0.38 * index) / (layers.length - 1)),
+              easing: this.retreatEasing,
+              fill: "both",
+            },
+          ),
+        );
+        retreats[0].onfinish = this.complete;
+        this.animations.push(
+          ...retreats,
+          ...foam.map((patch, index) =>
+            patch.animate(
+              [
+                { opacity: 1, transform: "translateY(0)" },
+                { opacity: 0, transform: `translateY(${-12 - index * 2}px)` },
+              ],
+              {
+                duration: this.duration * (0.72 + index * 0.016),
+                easing: this.retreatEasing,
+                fill: "both",
+              },
+            ),
+          ),
+          ...shells
+            .filter((shell) => shell.getClientRects().length > 0)
+            .map((shell, index) =>
+              shell.animate(
+                [
+                  {
+                    opacity: 0,
+                    transform: `translateY(-16%) rotate(${index % 2 === 0 ? -10 : 12}deg)`,
+                  },
+                  {
+                    opacity: 1,
+                    transform: "translateY(3%) rotate(2deg)",
+                    offset: 0.75,
+                  },
+                  { opacity: 1, transform: "none" },
+                ],
+                {
+                  duration: this.shellDuration,
+                  delay: this.duration * (0.1 + index * 0.035),
+                  easing: this.easing,
+                  fill: "both",
+                },
+              ),
+            ),
+        );
+      };
+      this.animations.push(wave, foamArrival);
+    }
+
+    private schedule() {
+      window.clearTimeout(this.timer);
+      if (!this.canPlay()) return;
+      this.timer = window.setTimeout(() => {
+        this.play();
+        this.schedule();
+      }, this.interval);
+    }
+
+    private refresh = () => {
+      this.complete();
+      this.schedule();
+    };
+
+    private handleKeydown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") this.paused = true;
+      this.refresh();
+    };
+
+    private handleResize = () => {
+      this.refresh();
+      this.scatterShells();
+    };
+
+    connectedCallback() {
+      const greetings = Array.from(
+        this.querySelectorAll<HTMLSpanElement>(".tide-greeting"),
+      );
+      const shells = Array.from(
+        this.querySelectorAll<SVGSVGElement>(".tide-shell svg"),
+      );
+      const shore = this.querySelector<HTMLDivElement>(".tide-shore");
+      const heading = this.querySelector<HTMLHeadingElement>("h1");
+      const overlay = this.querySelector<HTMLDivElement>(".tide-overlay");
+      const water = this.querySelector<HTMLDivElement>(".tide-water");
+      const layers = Array.from(
+        this.querySelectorAll<HTMLDivElement>(".tide-layer"),
+      );
+      const sheets = Array.from(
+        this.querySelectorAll<HTMLDivElement>(".tide-sheet"),
+      );
+      const bands = Array.from(
+        this.querySelectorAll<SVGPathElement>(".tide-band"),
+      );
+      const spindrift = this.querySelector<HTMLDivElement>(".tide-spindrift");
+      const foam = Array.from(
+        this.querySelectorAll<SVGPathElement>(".tide-foam-patch"),
+      );
+      const boundary = document.getElementById("selected-work");
+      const header = document.querySelector<HTMLElement>(".site-header");
+      if (
+        greetings.length < 2 ||
+        shells.length === 0 ||
+        !shore ||
+        !heading ||
+        !overlay ||
+        !water ||
+        layers.length !== bands.length ||
+        sheets.length !== bands.length ||
+        bands.length !== tideWavePaths(0).length ||
+        !spindrift ||
+        foam.length !== tideFoamPaths(0).length ||
+        !boundary ||
+        !header
+      ) {
+        throw new Error(
+          "The homepage tide is missing its greetings, artwork, or page boundaries.",
+        );
+      }
+      const headerLinks = Array.from(header.querySelectorAll("a"));
+      if (headerLinks.length === 0) {
+        throw new Error("The homepage tide requires shared header links.");
+      }
+      this.elements = {
+        greetings,
+        shells,
+        shore,
+        heading,
+        overlay,
+        water,
+        layers,
+        sheets,
+        bands,
+        spindrift,
+        foam,
+        boundary,
+        header,
+        headerLinks,
+      };
+      const styles = getComputedStyle(this);
+      this.interval = tideTimeMilliseconds(
+        styles.getPropertyValue("--interval-tide"),
+      );
+      this.duration = tideTimeMilliseconds(
+        styles.getPropertyValue("--duration-tide"),
+      );
+      this.turnDuration = tideTimeMilliseconds(
+        styles.getPropertyValue("--duration-tide-turn"),
+      );
+      this.shellDuration = tideTimeMilliseconds(
+        styles.getPropertyValue("--duration-tide-shell"),
+      );
+      this.easing = styles.getPropertyValue("--ease-standard").trim();
+      this.arrivalEasing = styles
+        .getPropertyValue("--ease-tide-arrival")
+        .trim();
+      this.retreatEasing = styles
+        .getPropertyValue("--ease-tide-retreat")
+        .trim();
+      if (this.duration + this.turnDuration >= this.interval) {
+        throw new Error(
+          "The homepage tide requires a cycle shorter than its repeat interval.",
+        );
+      }
+      document.addEventListener("keydown", this.handleKeydown);
+      this.preference.addEventListener("change", this.refresh);
+      window.addEventListener("scroll", this.refresh, { passive: true });
+      window.addEventListener("resize", this.handleResize);
+      for (const event of [
+        "visibilitychange",
+        "focusin",
+        "focusout",
+        "pointerdown",
+        "selectionchange",
+      ]) {
+        document.addEventListener(event, this.refresh);
+      }
+      this.observer = new IntersectionObserver(([entry]) => {
+        this.visible = entry.isIntersecting;
+        this.refresh();
+      });
+      this.observer.observe(this);
+      this.scatterShells();
+      this.refresh();
+    }
+
+    disconnectedCallback() {
+      window.clearTimeout(this.timer);
+      this.complete();
+      this.observer?.disconnect();
+      document.removeEventListener("keydown", this.handleKeydown);
+      this.preference.removeEventListener("change", this.refresh);
+      window.removeEventListener("scroll", this.refresh);
+      window.removeEventListener("resize", this.handleResize);
+      for (const event of [
+        "visibilitychange",
+        "focusin",
+        "focusout",
+        "pointerdown",
+        "selectionchange",
+      ]) {
+        document.removeEventListener(event, this.refresh);
+      }
+    }
+  }
+
+  customElements.define("tide-greeting", TideGreeting);
+</script>

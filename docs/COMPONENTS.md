@@ -129,9 +129,99 @@ all slides remain scrollable and nonfunctional buttons stay hidden.
 ## Retained inactive artwork
 
 PaintMarks and SprayGreeting remain in the source but are not imported by
-active pages. The home greeting is now a static Heading, with no animation,
-font-loading script, SVG masks, or decorative paint. Retaining those files
-does not add them to the published page or approve other source media.
+active pages. TideGreeting replaces the static home greeting without restoring
+font-loading scripts or decorative paint. Retaining the older files does not
+add them to the published page or approve other source media.
+
+## TideGreeting
+
+Homepage-only introduction accepting `greetings`, a readonly tuple of at least
+two strings supplied by the author. Composes Section and Heading, retains the
+reserved height for the tallest greeting using overlapping grid cells. The greeting
+is centered horizontally and vertically within its introduction. There
+is a homepage-only sand-writing treatment: system handwriting fonts, the existing
+dark-sand ink, and a static SVG filter that roughens the contours, builds a narrow
+raised sand bank, lights the grain, and shades the inside upper edge of each groove.
+The greeting stays selectable semantic HTML, not outlined SVG text or an image.
+The overlapping cells reserve its handwritten line height even without JavaScript;
+no font asset or external service is loaded. The outer bank matches the light-sand
+page canvas; the interior uses existing dark sand with only 15% grain modulation,
+keeping it lighter than the earlier full-strength shaded treatment.
+Other headings retain Georgia.
+There is no eyebrow, replay button, or pause button. Reserved shore bands above and below
+the heading scatter original ShoreShell artwork without overlapping text or navigation.
+On connection, resize, and each covered greeting change, visible shells receive
+shuffled horizontal slots and fresh random positions and rotations. Rotated bounds
+stay inside their slots and clear of the heading; rearrangement during a wash
+happens under the water, before settling begins.
+Each wash selects one to five shells, excluding the previous count so it always
+changes. Resize only repositions the existing selection. Separate horizontal slots
+within each shore band accommodate all five shells even on phones.
+
+Its native custom element uses the Web Animations API for a five-second
+start-to-start cadence. During each 3800ms cycle a nine-band wave arrives,
+the greeting changes only while covered at the turnaround, and the water
+immediately retreats as the shells
+settle in a staggered sequence. The absolutely positioned, clipped overlay measures the existing
+`selected-work` boundary and cannot paint over project content. The homepage
+requires the shared `site-header` for focus protection. Timing comes from
+timing tokens; `tideTimeMilliseconds` accepts both `ms` and `s` because production
+CSS optimization can change units. The component owns presentation and lifecycle handling.
+The pure `tideWavePaths` helper supplies the original layered contours.
+It combines a breathing swell with opposing currents and independent internal
+bands, then uses analytic slopes for continuously smooth cubic paths. Internal
+bands can cross, but remain behind the leading edge. A taller 720-unit drawing
+and 256px-512px responsive edge spread the bands more widely than the earlier
+six-layer treatment. Each band has a separately
+animated wrapper containing its SVG edge and matching solid water, preserving
+the seam-free overlap. `--duration-tide-turn` extends arrival by 400ms so the
+water keeps advancing slowly as it approaches its furthest reach. Arrival uses
+`--ease-tide-arrival` for a brisk entry and a pronounced slow final approach;
+the last 40% of arrival covers less than 5% of its travel, without a stationary hold or
+retreat delay. Foam follows the entire advancing phase, then fades as withdrawal
+begins. These animations share the normal cancellation lifecycle; no extra timer
+can restart an interrupted wash.
+Retreat then uses one continuous eased movement per layer, without an
+intermediate stop or second run-up. Arrival takes 1080ms, with more of the
+unchanged cycle reserved for gradual withdrawal. `--ease-tide-retreat` gives
+water and foam a gentler acceleration and deceleration than UI transitions.
+The darkest layer retreats in 1428ms;
+durations increase toward the shallow edge, whose 2720ms retreat completes the
+cycle. The three lightest layers fade throughout their slower withdrawal.
+`tideFoamPaths` builds irregular, tapered ribbons along that same leading edge.
+Their separate layer follows arrival, then freezes its contours at maximum reach:
+patches drift only backward and fade at staggered rates as the water pulls away.
+An active-only requestAnimationFrame loop updates those contours rather than
+sliding fixed shapes; foam geometry updates only during arrival.
+The illustration's nine `--art-tide-*` colors span deep blue to pure white and are a
+documented art-only exception; temporary white header ink uses the separate
+`--color-on-tide` role.
+
+Reduced motion and no-JavaScript rendering preserve static text and artwork.
+Escape stops waves for the rest of the visit, with a screen-reader instruction
+and no visible control. Document visibility, introduction visibility, scroll position,
+header keyboard focus, and text selection gate scheduling. Interactions and resizing
+finish the current animation; subsequent cycles wait a fresh five seconds.
+Listeners, observers, timers, animation frames, and animations are cleaned up on disconnection.
+The existing header is raised above the decorative overlay only during a wash.
+Active-frame SVG hit testing marks each real link white while it is fully backed
+by the two darkest water bands; no cloned or noninteractive navigation is used.
+The component clears its header attributes on completion or disconnection.
+Greeting changes are not live announcements. See the motion exception in
+[Design system](DESIGN_SYSTEM.md).
+
+## ShoreShell
+
+Decorative original SVG line drawings accepting a typed `variant`: `scallop`,
+`whelk`, `spiral`, `clam`, or `cockle`. Bold outlines and lighter hatching evoke
+the owner's embroidery reference without copying or embedding that source image.
+Drawings inherit existing semantic inks and have no solid fills. TideGreeting
+owns randomized placement and rotation, varied responsive sizes and existing
+purple, sand, ocean, and grass inks, and staggered settling motion.
+One to five shells are scattered across the reserved shore at every viewport size;
+the count changes with each wash. Without JavaScript, all five retain safe static
+positions. SVGs are hidden from assistive
+technology, nonfocusable, and pointer-transparent through their decorative container.
 
 ## Composition
 

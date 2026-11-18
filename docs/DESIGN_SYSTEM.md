@@ -17,7 +17,8 @@ retains its original colors and files; reference photographs are not published.
 - Headings use regular serif weight; sans-serif subheadings use medium weight.
   Fluid sizes and balanced wrapping preserve hierarchy on smaller screens.
 - No font service, new dependency, text texture, shadow, or animated greeting
-  is required. System availability can slightly change font metrics, an
+  is required outside the homepage tide's intentional sand-writing treatment.
+  System availability can slightly change font metrics, an
   intentional tradeoff for immediate rendering and zero font downloads.
 
 ## Coastal palette
@@ -34,8 +35,16 @@ retains its original colors and files; reference photographs are not published.
 | `--color-ocean-dark`     | `#40596c` | Darker grayish-blue; body text, links, and site header |
 
 Semantic color roles alias these eight primitives rather than defining
-additional shades. No white/black ink, opacity-derived UI colors, or
-shadow colors are added. The pastel surfaces carry the reference colors.
+additional shades, with one owner-requested exception: `--color-on-tide` is white
+header ink used only while opaque dark wave water covers the link. Normal header
+ink returns as that water clears. No other white/black ink, opacity-derived UI
+colors, or shadow colors are added. The pastel surfaces carry the reference colors.
+The homepage tide illustration is an intentional art-only palette exception:
+nine `--art-tide-*` tokens follow the owner's layered-blue reference, from
+pure white and pale foam through muted blue to deep navy water. These fills belong only to decorative wave
+artwork; they are not interface color roles and must not style text, links,
+controls, or other page surfaces. The base UI palette retains its eight colors;
+the temporary white tide-header ink is its sole additional foreground role.
 Section headers keep each pair together: dark beige on off-white, dark grass on pale grass,
 blueish purple on pink, and ocean blue on sky blue. Darker members are
 intentionally deep enough for legible small text, rather than pale pastels
@@ -50,6 +59,8 @@ Outside paired section headers and the footer, all text uses the darker
 grayish-blue ocean ink, including page titles, prose, subtitles, labels,
 links, captions, and controls. The page stays off-white. The footer uses
 the complete dune-green pair: pale grass with dark-green text and links.
+The homepage greeting is the sole additional text treatment: existing dark-sand
+ink on the off-white canvas, also meeting 4.5:1 contrast.
 All surfaces retain at least 4.5:1 text contrast.
 
 Shared `.color-pair` styling with `--sand`, `--sky`, `--grass`, or `--sunset`
@@ -93,10 +104,110 @@ painted fonts or import the decorative greeting.
   48px gap; below that breakpoint, details follow the image. Rows have 64px
   separation. Skills reuse the project-metadata pill styles; thumbnails
   remain complete and uncropped. Other listings retain their grid layout.
-- Home uses the existing welcome phrase as static semantic text. There is no
-  hero artwork, paint stripe, overspray, or entrance animation.
-  No divider separates the welcome and selected-work sections; their shared
-  Section spacing remains unchanged.
+- Home uses TideGreeting to cycle the three author-approved phrases every
+  five seconds while the introduction is visible at the top of the page.
+  An original nine-band blue-to-white SVG tide descends over the header and introduction,
+  changes the phrase under cover, then retreats upward and leaves scattered
+  bold line-drawn shells with staggered settling motion. This is an intentional exception
+  to the previously static welcome, not a return to painted typography.
+  The tide is clipped at the actual start of Selected work, measured before
+  each cycle rather than assumed from a fixed header height. Introductory
+  phrases share a grid cell that reserves the tallest phrase's height, and
+  equal shore bands above and below center the greeting within its introduction
+  and reserve space for shell artwork, with no eyebrow or visible animation controls.
+  This intentionally increases the introduction's height without moving work
+  during text changes. There is no replay button or divider.
+- The rotating greeting intentionally departs from Georgia and ocean ink to evoke
+  handwriting carved into sand. `--font-tide-writing` uses locally available
+  handwriting faces and cursive fallback; no retained source font is published.
+  A static SVG filter models finger-drawn grooves rather than flat printed ink:
+  displacement roughens letter edges by at most 1.2px per axis, morphology builds
+  a narrow raised sand bank, grain lighting textures the recessed strokes, and a
+  dark inner upper edge gives them depth. The outer bank matches the light-sand
+  canvas exactly. The interior and inner edge use existing dark sand, with only
+  15% grain modulation so the strokes stay lighter than full-strength shaded ink.
+  No additional sand colors are introduced; lighting also uses existing light sand.
+  The dark-sand base remains readable if filters are unsupported. Filter offsets,
+  grain, and bank widths are decorative lettering geometry, not layout spacing. The text
+  remains semantic, selectable HTML with its existing reduced-motion and no-JS
+  behavior; there is no animated texture. Its body-scale line height leaves room
+  for handwritten ascenders and descenders. Other headings and the page canvas
+  remain unchanged.
+- `--interval-tide` is 5000ms between cycle starts; `--duration-tide` is 3400ms
+  for arrival and retreat; `--duration-tide-turn` extends arrival by 400ms;
+  `--duration-tide-shell` is 440ms. Greeting replacement happens at full cover,
+  at the turnaround, followed immediately by withdrawal. The full 3800ms wash still
+  finishes before the next five-second cycle.
+  The deeper wave edge uses `--height-tide-edge`, bounded between 256px and
+  512px using existing spacing tokens. Its 720-unit drawing spreads neighboring
+  contours by 48 units on average, making the visible color bands wider than
+  the previous six-layer wash at every viewport size.
+  It shares the chapter artwork's 75rem
+  minimum drawing width, so mobile crops broad swells rather than compressing
+  them. Its nine opaque bands put a pure-white leading edge against the dry page and
+  deep navy behind it, adapting the owner's reference for a wash from above.
+  Each band has its own matching solid water, painted over its SVG edge by one
+  CSS pixel to prevent a visible anti-aliasing seam at fractional positions.
+  `tideWavePaths` combines a changing-amplitude, changing-wavelength swell with
+  opposing currents. Internal bands have independent rates and can cross each
+  other, but cannot overtake the leading edge. Analytic tangents generate
+  smooth cubic curves, not rigid sheets translated sideways. A requestAnimationFrame
+  loop updates paths only during the active wash and is canceled on completion
+  or interruption. All layers withdraw in one continuous eased motion without
+  intermediate keyframes, pauses, or forward surges. Darker layers finish
+  sooner; the three lightest layers retreat more slowly and fade throughout.
+  Arrival takes 1080ms with `--ease-tide-arrival`, continuously advancing while
+  strongly decelerating toward its furthest reach rather than holding still.
+  Its front-loaded easing reserves the last 40% of arrival for less than 5%
+  of the travel, making the final approach visibly slower without extending
+  arrival or altering retreat. There is no
+  delayed retreat: only the instantaneous zero-velocity point needed to reverse
+  direction. Retreat spans 1428ms for the deepest band to 2720ms for
+  the shallowest, increasing depth separation. `--ease-tide-retreat` gives
+  withdrawal and foam fading a gradual acceleration and deceleration instead
+  of the quicker UI easing. Arrival is faster and withdrawal longer while
+  the complete 3800ms cycle and five-second start cadence remain unchanged.
+  A separate SVG foam layer follows
+  arrival, then retains the furthest wash line while water recedes. Its original
+  tapered ribbons drift backward slightly and fade independently; their geometry
+  freezes on arrival completion. Water and foam opacity are intentional illustration-only
+  exception to the opaque UI palette, not a new text or control treatment.
+  Path coordinates, transforms, phase rates, foam fading, and shell rotation
+  are decorative-art geometry, not new UI-scale values. Water uses the
+  documented `--art-tide-*` exception; shells use existing purple, sand, ocean,
+  and grass inks as bold outlines and lighter hatching, not filled pink silhouettes.
+  Their slight irregularity, non-scaling strokes, varied rotations, and staggered
+  landing evoke the supplied embroidery reference without publishing it.
+  Each wash chooses one to five shells at every viewport size, never repeating
+  the preceding count. Resize retains that count. Each shore band has its own
+  horizontal slots so five shells still fit on phones without collisions.
+  Shells vary in size using a 48px-64px token-based responsive base and per-drawing
+  art scales. Their fully opaque inks and 2.2px outlines make them more prominent.
+  Connection, resize, and each fully covered greeting change reshuffle horizontal
+  slots, positions, and rotations. Rotated bounds and a 4px artwork clearance keep
+  drawings inside their slots and out of the heading, navigation, and Selected work.
+  The static fallback retains all five with varied sizes and colors in fixed safe
+  positions. No viewport-specific shell count or local media-query exception remains.
+  No image, font, video, or external
+  service is loaded for the tide.
+- There is no pause/replay button. Escape stops the current cycle immediately
+  and suppresses future waves until navigation/reload; a visually hidden instruction
+  makes this available to screen-reader users without adding visible UI.
+  Reduced motion disables the tide and shell motion. Without JavaScript, the
+  first greeting and shell scatter remain static.
+  Hidden tabs, scrolling away from the top, an offscreen introduction, header
+  keyboard focus and text selection suspend cycles. Pointer, keyboard, resize,
+  and focus interactions finish any current wash immediately so navigation
+  and focus are never obscured. Resuming waits a fresh five seconds.
+  During a wash the actual header is stacked above the artwork, without a
+  background fill or duplicate navigation. Links turn white only when the two
+  darkest opaque bands cover them, tracked against their SVG contours. Ink
+  changes immediately to avoid fading white text over the cleared canvas.
+  The overlay stays pointer-transparent and real links remain clickable;
+  keyboard focus and pointer activation still clear the wave immediately.
+  Decorative artwork is hidden from assistive technology and pointer-transparent;
+  inactive phrases are hidden from both sight and screen readers. Text changes
+  are not live announcements, and the main heading remains semantic HTML.
 - The header has no background fill, allowing the off-white page canvas to show through.
   Its text remains ocean blue, with no bottom border.
   Header navigation uses plain sans-serif links without spray texture or shadow, padded targets, visible
