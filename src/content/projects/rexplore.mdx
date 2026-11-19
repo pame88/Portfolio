@@ -20,12 +20,18 @@ order: 4
 ---
 
 import Section from "../../components/layout/Section.astro";
+import SectionHeading from "../../components/typography/SectionHeading.astro";
 import ImageCarousel from "../../components/media/ImageCarousel.astro";
 import { rexploreProcessSlides } from "../rexplore-process";
 
 <Section>
 
-## Research process
+<SectionHeading
+  slot="heading"
+  id="research-process"
+  title="Research process"
+  label="01 / Research"
+/>
 
 Browse the slides using the arrows or swipe. With the slides focused, use
 the arrow keys to navigate, Home for the first slide, or End for the last.

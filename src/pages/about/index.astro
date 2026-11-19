@@ -3,22 +3,39 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Section from "../../components/layout/Section.astro";
 import Heading from "../../components/typography/Heading.astro";
 import Text from "../../components/typography/Text.astro";
+import ResponsiveImage from "../../components/media/ResponsiveImage.astro";
+import profile from "../../assets/Random/Profile.jpg";
 ---
 
 <BaseLayout
   title="About"
   description="About this evolving portfolio foundation. Biography and contact information have not yet been supplied."
 >
+  <div class="about-header">
+    <Section>
+      <div class="about-intro">
+        <div class="about-portrait">
+          <ResponsiveImage
+            src={profile}
+            alt="Eamonn Burke at the beach at sunset."
+            priority
+          />
+        </div>
+        <div class="flow">
+          <p class="type-label eyebrow">About / Placeholder</p>
+          <Heading as="h1" variant="display">
+            Room for a<br />
+            personal story.
+          </Heading>
+          <Text size="l" variant="subtitle">
+            This page is reserved for an author-written introduction,
+            background, interests, and approach to design.
+          </Text>
+        </div>
+      </div>
+    </Section>
+  </div>
   <Section>
-    <p class="type-label eyebrow">About / Placeholder</p>
-    <Heading as="h1" variant="display" tone="orange">
-      Room for a<br />
-      personal story.
-    </Heading>
-    <Text size="l" variant="subtitle">
-      This page is reserved for an author-written introduction, background,
-      interests, and approach to design.
-    </Text>
     <Heading as="h2" variant="m">
       Contact
     </Heading>
@@ -28,3 +45,29 @@ import Text from "../../components/typography/Text.astro";
     </Text>
   </Section>
 </BaseLayout>
+
+<style>
+  :global(body:has(.about-header) > .site-header) {
+    background-color: var(--color-sky-light);
+  }
+  .about-header {
+    background: linear-gradient(
+      180deg,
+      var(--color-sky-light) 0%,
+      var(--color-sunset-pink) 35%,
+      var(--color-sky-light) 70%,
+      var(--color-page) 100%
+    );
+  }
+  .about-intro {
+    display: grid;
+    align-items: center;
+    gap: var(--space-12);
+  }
+  .about-portrait {
+    width: min(100%, var(--size-about-portrait));
+    margin-inline: auto;
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+  }
+</style>

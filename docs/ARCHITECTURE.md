@@ -13,6 +13,9 @@ rotations under each wash. Arrival slows into a continuously advancing turnaroun
 instead of holding at full coverage, then immediately reverses into withdrawal;
 the complete 3800ms wash retains its five-second start-to-start cadence.
 A faster 1080ms arrival leaves 2720ms for the longest, gently eased retreat.
+Every wash moves straight down and back up. Randomized broad curvature ranges
+from rounded to pronounced deep curves, with smaller traveling ripples during arrival;
+water and foam share each wash's geometry parameters.
 Original ShoreShell SVGs evoke the
 owner's embroidery-style reference without embedding it. A native custom element and Web Animations API
 coordinate the sequence without React, dependencies, or animation media files.
@@ -21,6 +24,13 @@ from the pure `tideWavePaths` helper. A separate foam layer follows the incoming
 edge, then trails behind and dissolves in patches while water recedes in one
 continuous motion. Each water band has its own matching solid fill and retreat:
 dark layers withdraw faster, while the three lightest layers trail and fade.
+One thicker foam trail remains at the turnaround edge, without additional
+trails during withdrawal. The wash measures the
+entire shell shore for coverage and reaches three quarters into Selected work's top
+padding, retaining a dry gap and the complete curved edge. Shell artwork uses
+pastel pink, rose, lilac, lavender, and light-brown inks, with no red, blue, or green.
+The 900-unit wave drawing uses wider 64-unit band spacing and stronger independent
+layer bends; its responsive height allowance preserves the entire shoreline.
 The original SVG artwork uses the owner's
 darker blue reference, extending through pale blue to a white leading edge,
 with wider band separation, without changing interface color roles.

@@ -20,25 +20,53 @@ function validateTime(seconds: number) {
 
 type Point = { y: number; slope: number };
 
-function wavePoint(x: number, seconds: number, layer: number): Point {
-  const swellRate = (Math.PI * 2) / (950 + 170 * Math.sin(seconds * 0.29));
-  const currentRate = (Math.PI * 2) / 620;
-  const rippleRate = (Math.PI * 2) / 270;
-  const amplitude = 64 + 16 * Math.sin(seconds * 0.47);
+export interface TideVariation {
+  phase: number;
+  amplitude: number;
+  wavelength: number;
+  center: number;
+}
+
+export function createTideVariation(): TideVariation {
+  return {
+    phase: Math.random() * 100,
+    amplitude: 80 + Math.random() * 95,
+    wavelength: 1600 + Math.random() * 800,
+    center: 320 + Math.random() * 960,
+  };
+}
+
+function wavePoint(
+  x: number,
+  seconds: number,
+  layer: number,
+  variation?: TideVariation,
+): Point {
+  const swellRate =
+    (Math.PI * 2) /
+    ((variation?.wavelength ?? 2000) * (1 + 0.035 * Math.sin(seconds * 0.29)));
+  const currentRate = (Math.PI * 2) / 470;
+  const rippleRate = (Math.PI * 2) / 210;
+  // Deeper bands soften the broad bend to keep all nine contours inside the SVG.
+  const amplitude =
+    (variation?.amplitude ?? 125) *
+    (1 + 0.08 * Math.sin(seconds * 0.47)) *
+    (1 - layer * 0.09);
   const swell =
-    x * swellRate - seconds * 0.85 + 0.35 * Math.sin(seconds * 0.53);
-  const current = x * currentRate + seconds * 0.9;
-  const ripple = x * rippleRate - seconds * 0.8;
+    (x - (variation?.center ?? 800)) * swellRate +
+    0.38 * Math.sin(seconds * 0.6);
+  const current = x * currentRate + seconds * 2.7;
+  const ripple = x * rippleRate - seconds * 4.2;
   const leading = {
     y:
-      570 +
-      amplitude * Math.sin(swell) +
-      16 * Math.cos(current) +
-      6 * Math.sin(ripple),
+      690 +
+      amplitude * Math.cos(swell) +
+      13 * Math.cos(current) +
+      7 * Math.sin(ripple),
     slope:
-      amplitude * swellRate * Math.cos(swell) -
-      16 * currentRate * Math.sin(current) +
-      6 * rippleRate * Math.cos(ripple),
+      -amplitude * swellRate * Math.sin(swell) -
+      13 * currentRate * Math.sin(current) +
+      7 * rippleRate * Math.cos(ripple),
   };
   if (layer === 0) return leading;
 
@@ -46,20 +74,20 @@ function wavePoint(x: number, seconds: number, layer: number): Point {
   const crossRate = (Math.PI * 2) / (520 + layer * 110);
   const undertowRate = (Math.PI * 2) / (310 + layer * 70);
   const spacing = x * spacingRate + seconds * 0.48;
-  const cross = x * crossRate + seconds * (0.8 + layer * 0.17) + layer * 1.4;
+  const cross = x * crossRate + seconds * (1.2 + layer * 0.22) + layer * 1.4;
   const undertow =
-    x * undertowRate - seconds * (0.55 + layer * 0.11) + layer * 0.65;
+    x * undertowRate - seconds * (0.9 + layer * 0.14) + layer * 0.65;
   return {
     y:
       leading.y -
-      layer * (48 + 4 * Math.sin(spacing)) -
-      20 * Math.sin(cross) -
-      12 * Math.cos(undertow),
+      layer * (64 + 6 * Math.sin(spacing)) -
+      26 * Math.sin(cross) -
+      14 * Math.cos(undertow),
     slope:
       leading.slope -
-      layer * 4 * spacingRate * Math.cos(spacing) -
-      20 * crossRate * Math.cos(cross) +
-      12 * undertowRate * Math.sin(undertow),
+      layer * 6 * spacingRate * Math.cos(spacing) -
+      26 * crossRate * Math.cos(cross) +
+      14 * undertowRate * Math.sin(undertow),
   };
 }
 
@@ -82,31 +110,43 @@ function curve(
   return path;
 }
 
-export function tideWavePaths(seconds: number): string[] {
+export function tideWavePaths(
+  seconds: number,
+  variation?: TideVariation,
+): string[] {
   validateTime(seconds);
+  seconds += variation?.phase ?? 0;
   return Array.from({ length: 9 }, (_, layer) => {
-    const contour = curve(-200, 1800, 20, (x) => wavePoint(x, seconds, layer));
+    const contour = curve(-200, 1800, 40, (x) =>
+      wavePoint(x, seconds, layer, variation),
+    );
     return `M -200 -40 L ${contour} L 1800 -40 Z`;
   });
 }
 
-export function tideFoamPaths(seconds: number): string[] {
+export function tideFoamPaths(
+  seconds: number,
+  variation?: TideVariation,
+): string[] {
   validateTime(seconds);
+  seconds += variation?.phase ?? 0;
   return Array.from({ length: 6 }, (_, patch) => {
     const start =
       -200 + (patch * 2000) / 6 + 16 * Math.sin(seconds * 0.7 + patch);
     const end = start + 245 + 30 * Math.cos(seconds * 0.4 + patch * 1.7);
-    const outside = curve(start, end, 8, (x) => wavePoint(x, seconds, 0));
+    const outside = curve(start, end, 8, (x) =>
+      wavePoint(x, seconds, 0, variation),
+    );
     const inside = curve(end, start, 8, (x) => {
-      const leading = wavePoint(x, seconds, 0);
+      const leading = wavePoint(x, seconds, 0, variation);
       const taper = ((x - start) * Math.PI) / (end - start);
       const thickness =
-        12 +
-        6 * Math.sin(x * 0.065 + seconds) +
-        3 * Math.cos(x * 0.11 - seconds * 0.3);
+        26 +
+        10 * Math.sin(x * 0.065 + seconds) +
+        5 * Math.cos(x * 0.11 - seconds * 0.3);
       const thicknessSlope =
-        6 * 0.065 * Math.cos(x * 0.065 + seconds) -
-        3 * 0.11 * Math.sin(x * 0.11 - seconds * 0.3);
+        10 * 0.065 * Math.cos(x * 0.065 + seconds) -
+        5 * 0.11 * Math.sin(x * 0.11 - seconds * 0.3);
       return {
         y: leading.y - thickness * Math.sin(taper),
         slope:

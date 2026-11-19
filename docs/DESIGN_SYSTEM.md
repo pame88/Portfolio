@@ -68,8 +68,9 @@ modifiers sets both background
 and foreground together, including nested heading tones, secondary text,
 links, hover states, borders, and focus rings. Do not select ink independently
 from its surface. Hover retains the paired ink and never underlines text,
-including brand, navigation, project cards, and prose links. Prose links and
-the current-page navigation item remain underlined at rest for discoverability;
+including brand, navigation, project cards, and prose links. Prose links
+remain underlined at rest for discoverability; navigation links never underline,
+including the current page, which retains its semantic `aria-current` state;
 keyboard focus retains a visible outline without adding colors.
 
 Existing tone names (`magenta`, `pink`, `orange`, `violet`) and complement
@@ -86,6 +87,17 @@ painted fonts or import the decorative greeting.
 
 ## Layout and components
 
+- The About introduction pairs a circular portrait with the existing title and
+  subtitle, stacking on mobile and sitting side by side from 48rem. The
+  `--size-about-portrait` token controls its fluid diameter. Its full-width,
+  static gradient expands the approved photo's sky, sunset, and ocean into soft
+  blue/pink/blue transitions, fading into the page canvas. This intentional
+  decorative mixed-surface exception uses existing light palette tokens and
+  ocean ink for readable text, with no image blur cost, animation, or duplicated
+  portrait in the background. On About only, the site header continues the
+  gradient's sky-blue top without a seam; its navigation and ink stay unchanged.
+  The responsive grid rule lives alongside the shared tablet rules so the
+  custom-media definition is available during CSS processing.
 - Keep the existing 4-128px spacing scale and fluid page gutters. All nonzero
   spacing, colors, font sizes, radii, shadows, and timing use shared tokens.
   Zero, intrinsic sizing, and structural percentages are CSS mechanics.
@@ -105,7 +117,7 @@ painted fonts or import the decorative greeting.
   separation. Skills reuse the project-metadata pill styles; thumbnails
   remain complete and uncropped. Other listings retain their grid layout.
 - Home uses TideGreeting to cycle the three author-approved phrases every
-  five seconds while the introduction is visible at the top of the page.
+  five seconds while the introduction is visible.
   An original nine-band blue-to-white SVG tide descends over the header and introduction,
   changes the phrase under cover, then retreats upward and leaves scattered
   bold line-drawn shells with staggered settling motion. This is an intentional exception
@@ -139,9 +151,20 @@ painted fonts or import the decorative greeting.
   at the turnaround, followed immediately by withdrawal. The full 3800ms wash still
   finishes before the next five-second cycle.
   The deeper wave edge uses `--height-tide-edge`, bounded between 256px and
-  512px using existing spacing tokens. Its 720-unit drawing spreads neighboring
-  contours by 48 units on average, making the visible color bands wider than
-  the previous six-layer wash at every viewport size.
+  512px using existing spacing tokens. Its 900-unit drawing spreads neighboring
+  contours by 64 units nominally. A larger measured edge-height allowance increases
+  visible band spacing, not just drawing-space distances.
+  The wash extends through three quarters of Selected work's top padding, leaving
+  the last quarter as a dry gap above its heading. This art-only reach adjustment
+  accommodates wider bands and deeper curves without clipping or moving content.
+  At each cycle, the edge height is capped at 2.1 times the measured space between that limit and the lowest of the navigation,
+  reserved greeting, or complete shell shore. Measuring the whole shore guarantees
+  coverage before and after each randomized scatter, not just for current shells. The leading
+  contour stays within 481-899 units of its 900-unit drawing, so the opaque wash
+  covers the greeting and all shells at turnaround while its full curved edge fits above the
+  section boundary. Arrival stops at zero translation with no downward overshoot;
+  clipping is only a safety boundary, not the visible shoreline. The section's
+  remaining top padding leaves a dry gap above the Selected work heading.
   It shares the chapter artwork's 75rem
   minimum drawing width, so mobile crops broad swells rather than compressing
   them. Its nine opaque bands put a pure-white leading edge against the dry page and
@@ -149,9 +172,19 @@ painted fonts or import the decorative greeting.
   Each band has its own matching solid water, painted over its SVG edge by one
   CSS pixel to prevent a visible anti-aliasing seam at fractional positions.
   `tideWavePaths` combines a changing-amplitude, changing-wavelength swell with
-  opposing currents. Internal bands have independent rates and can cross each
+  opposing currents. Internal bands use stronger 26/14-unit bends and faster
+  opposing phase rates; they can cross each
   other, but cannot overtake the leading edge. Analytic tangents generate
-  smooth cubic curves, not rigid sheets translated sideways. A requestAnimationFrame
+  smooth cubic curves, not rigid sheets translated sideways.
+  Every wash descends vertically and immediately withdraws straight back up,
+  without diagonal sweeps or shear. Randomized amplitude (80-175 drawing units),
+  wavelength (1600-2400 units), phase, and off-center position vary the shoreline
+  from rounded arcs to pronounced deep curves. Faster opposing small ripples
+  continuously deform the incoming water and matching foam. The broad bend
+  softens toward deeper bands to keep all nine contours inside the drawing.
+  All variations
+  retain the measured coverage, clipping, timing, scroll behavior, and motion safeguards.
+  A requestAnimationFrame
   loop updates paths only during the active wash and is canceled on completion
   or interruption. All layers withdraw in one continuous eased motion without
   intermediate keyframes, pauses, or forward surges. Darker layers finish
@@ -172,10 +205,16 @@ painted fonts or import the decorative greeting.
   tapered ribbons drift backward slightly and fade independently; their geometry
   freezes on arrival completion. Water and foam opacity are intentional illustration-only
   exception to the opaque UI palette, not a new text or control treatment.
+  Foam ribbons retain 11-41 drawing-unit midpoint thickness. Only one six-patch
+  trail is left at the turnaround edge, with no additional rows during withdrawal.
+  Interruption cancels all foam animations.
   Path coordinates, transforms, phase rates, foam fading, and shell rotation
   are decorative-art geometry, not new UI-scale values. Water uses the
-  documented `--art-tide-*` exception; shells use existing purple, sand, ocean,
-  and grass inks as bold outlines and lighter hatching, not filled pink silhouettes.
+  documented `--art-tide-*` exception. Shells add a separate art-only exception:
+  `--art-shell-pink`, `--art-shell-rose`, `--art-shell-lilac`,
+  `--art-shell-lavender`, and `--art-shell-sand` provide pastel pinks, purples,
+  and light brown. No shell uses red, blue, or green. These colors remain bold
+  outlines and lighter hatching, not solid silhouettes or new interface roles.
   Their slight irregularity, non-scaling strokes, varied rotations, and staggered
   landing evoke the supplied embroidery reference without publishing it.
   Each wash chooses one to five shells at every viewport size, never repeating
@@ -195,24 +234,28 @@ painted fonts or import the decorative greeting.
   makes this available to screen-reader users without adding visible UI.
   Reduced motion disables the tide and shell motion. Without JavaScript, the
   first greeting and shell scatter remain static.
-  Hidden tabs, scrolling away from the top, an offscreen introduction, header
-  keyboard focus and text selection suspend cycles. Pointer, keyboard, resize,
+  Scrolling never interrupts an active wash, even when the introduction leaves
+  the viewport. An offscreen introduction suspends only future cycles.
+  Hidden tabs, header keyboard focus and text selection suspend cycles.
+  Header pointer activation, Escape, resize,
   and focus interactions finish any current wash immediately so navigation
   and focus are never obscured. Resuming waits a fresh five seconds.
+  Touch gestures outside the header and keyboard scrolling do not cancel water.
   During a wash the actual header is stacked above the artwork, without a
   background fill or duplicate navigation. Links turn white only when the two
   darkest opaque bands cover them, tracked against their SVG contours. Ink
   changes immediately to avoid fading white text over the cleared canvas.
   The overlay stays pointer-transparent and real links remain clickable;
-  keyboard focus and pointer activation still clear the wave immediately.
+  keyboard focus and header pointer activation still clear the wave immediately.
   Decorative artwork is hidden from assistive technology and pointer-transparent;
   inactive phrases are hidden from both sight and screen readers. Text changes
   are not live announcements, and the main heading remains semantic HTML.
 - The header has no background fill, allowing the off-white page canvas to show through.
   Its text remains ocean blue, with no bottom border.
-  Header navigation uses plain sans-serif links without spray texture or shadow, padded targets, visible
-  focus, native wrapping, and an underline plus `aria-current` for the
-  current page at rest, never on hover. The Eamonn Burke brand and links use
+  Header navigation uses 1.125rem plain sans-serif links via `--type-nav`,
+  without spray texture or shadow, padded targets, visible
+  focus, native wrapping, and `aria-current` for the
+  current page, with no underline in any state. The Eamonn Burke brand and links use
   ocean-blue ink in every state; keyboard focus remains outlined.
   Footer uses a quiet dune-grass surface with matching dark-green copy and links.
 - Chapter headings retain their 24px text inset but replace filled panels

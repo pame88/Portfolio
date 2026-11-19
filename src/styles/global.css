@@ -162,6 +162,10 @@ button {
 }
 
 @media (--tablet) {
+  .about-intro {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: var(--space-16);
+  }
   .project-card.project-card--row > a {
     display: grid;
     grid-template-columns: repeat(var(--grid-columns-double), minmax(0, 1fr));

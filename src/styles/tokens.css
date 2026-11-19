@@ -13,7 +13,7 @@
   --type-heading-m: clamp(1.5rem, 2.5vw, 2rem);
   --type-heading-s: 1.25rem;
   --type-graffiti: var(--type-heading-l);
-  --type-nav: 0.9375rem;
+  --type-nav: 1.125rem;
   --type-paint-glyph: 100px;
   --type-body-l: clamp(1.125rem, 1.5vw, 1.375rem);
   --type-body-m: 1rem;
@@ -47,6 +47,7 @@
   --grid-columns-triple: 3;
   --header-height: var(--space-16);
   --height-project-hero: 55svh;
+  --size-about-portrait: clamp(12rem, 28vw, 24rem);
   --height-section-wave: 18rem;
   --height-tide-edge: clamp(
     calc(var(--space-32) * 2),
@@ -72,6 +73,11 @@
   --art-tide-swell: #4587b0;
   --art-tide-water: #255f97;
   --art-tide-deep: #195385;
+  --art-shell-pink: #daa2c6;
+  --art-shell-rose: #e2bad1;
+  --art-shell-lilac: #c3b0de;
+  --art-shell-lavender: #b3a0cf;
+  --art-shell-sand: #cbb79f;
   --color-page: var(--color-sand-light);
   --color-surface: var(--color-sand-light);
   --color-surface-warm: var(--color-grass-light);

@@ -20,13 +20,19 @@ order: 2
 ---
 
 import Section from "../../components/layout/Section.astro";
+import SectionHeading from "../../components/typography/SectionHeading.astro";
 import VideoPlayer from "../../components/media/VideoPlayer.astro";
 import walkthroughVideo from "../../assets/ListeningParty/ListeningPartyVideo.mp4?url";
 import walkthroughPoster from "../../assets/ListeningParty/ListeningPartyVideo-poster.jpg";
 
 <Section>
 
-## Concept walkthrough
+<SectionHeading
+  slot="heading"
+  id="concept-walkthrough"
+  title="Concept walkthrough"
+  label="01 / Walkthrough"
+/>
 
 <VideoPlayer
   src={walkthroughVideo}

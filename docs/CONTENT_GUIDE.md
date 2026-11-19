@@ -81,6 +81,13 @@ Set `priority` only for important above-the-fold imagery. Project-card thumbnail
 
 Existing root media folders are source material, not approval to publish. Select assets with the owner first.
 
+The About header uses the owner-approved `src/assets/Random/Profile.jpg`
+original, eagerly loaded through ResponsiveImage with its source dimensions.
+Its square composition is intentionally framed as a circle using CSS, without
+re-encoding the source. The photo's beach sunset informs a decorative CSS
+gradient; no additional assets from Random are approved by this selection.
+Biography and contact copy remain explicitly placeholder content.
+
 ## Videos
 
 Use `VideoPlayer` in MDX with `src`, imported `poster`, and `label`. For content videos with speech, supply a WebVTT `captions` URL and a `transcript` link; check accuracy and keyboard playback. Captionless videos still need an equivalent textual description.
@@ -100,6 +107,10 @@ Compose Markdown headings/text and reusable Sections/media in MDX. Sections fill
 For a long case study, `SectionHeading` distinguishes chapters with a pale-blue wave motif behind blue text and subsections with a neutral rule. Place chapter headings directly inside `Section` with `slot="heading"` so the artwork reaches the viewport edges while title text and body media retain their shared gutters. Keep subsection headings in the default content slot. Supply a stable `id` when replacing a Markdown heading so existing fragment links still work; the same id also keeps the decorative wave form stable across builds. Every chapter wave has the same shared height and a consistent vertical spread across its width. Existing `tone` values remain accepted, but chapter styling consistently uses the blue pairing. Dragon Admin Center keeps its three chapter anchors, uses `FeatureHeading` for consistent titles and "Feature highlight" eyebrows on all four features, numbers four process steps, and separates the audit, design-system, GA-design, and customer-interaction content into individual Sections. Its environment picker uses `FeatureHighlight` for a media-left, introduction-right composition with the solution spanning the full content width below. Mobile reading order remains introduction, media, then solution. The supplied narrative and image sequence are preserved.
 
 Markdown h2 titles inherit the shared Georgia serif style; h3/h4 subheadings use medium-weight system sans-serif. Do not select heading levels just to change appearance. Component-based intro subtitles use `<Text variant="subtitle">` and remain clean sans-serif, like paragraphs, captions, labels, and metadata. Optional `Heading` tones use accessible coastal inks; their older color names are retained for compatibility, not literal pink or violet styling.
+
+Listening Parties, eat!, and ReXplore also use slotted `SectionHeading` chapter
+headers for their existing media sections, matching DAC's full-width wave artwork.
+Keep their existing section titles, anchor IDs, media, and presentation order.
 
 ## Solution carousels
 

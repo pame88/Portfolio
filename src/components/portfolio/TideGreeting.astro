@@ -125,7 +125,7 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
         <div class="tide-layer">
           <svg
             class="tide-edge"
-            viewBox="0 0 1600 720"
+            viewBox="0 0 1600 900"
             preserveAspectRatio="none"
           >
             <path class="tide-band" d={path} />
@@ -135,7 +135,7 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
       ))}
     </div>
     <div class="tide-spindrift">
-      <svg class="tide-edge" viewBox="0 0 1600 720" preserveAspectRatio="none">
+      <svg class="tide-edge" viewBox="0 0 1600 900" preserveAspectRatio="none">
         {tideFoamPaths(0).map((path) => (
           <path class="tide-foam-patch" d={path} />
         ))}
@@ -206,7 +206,7 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
     height: var(--shell-size);
     top: var(--shell-y, var(--space-12));
     left: var(--shell-x, 15%);
-    color: var(--color-horizon-purple);
+    color: var(--art-shell-pink);
     transform: translate(-50%, -50%) rotate(var(--shell-rotation, -18deg));
   }
   .tide-shell:nth-child(2) {
@@ -215,14 +215,14 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
     --shell-x: 35%;
     --shell-rotation: 16deg;
 
-    color: var(--color-sand-dark);
+    color: var(--art-shell-rose);
   }
   .tide-shell:nth-child(3) {
     --shell-scale: 0.85;
     --shell-x: 50%;
     --shell-rotation: -10deg;
 
-    color: var(--color-ocean-dark);
+    color: var(--art-shell-lilac);
   }
   .tide-shell:nth-child(4) {
     --shell-scale: 0.75;
@@ -230,16 +230,21 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
     --shell-x: 70%;
     --shell-rotation: 12deg;
 
-    color: var(--color-grass-dark);
+    color: var(--art-shell-sand);
   }
   .tide-shell:nth-child(5) {
     --shell-scale: 0.95;
     --shell-x: 85%;
     --shell-rotation: -22deg;
 
-    color: var(--color-sand-dark);
+    color: var(--art-shell-lavender);
   }
   .tide-overlay {
+    --tide-edge-height: min(
+      var(--height-tide-edge),
+      calc(var(--tide-edge-clearance) * 2.1)
+    );
+
     position: absolute;
     inset: 0 0 auto;
     height: var(--tide-height, 0px);
@@ -255,7 +260,8 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
   }
   .tide-sheet {
     position: absolute;
-    inset: 0 0 calc(var(--height-tide-edge) - 1px);
+    inset: calc(-1 * var(--tide-edge-height)) 0
+      calc(var(--tide-edge-height) - 1px);
     background-color: var(--tide-fill);
   }
   .tide-layer {
@@ -267,7 +273,7 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
     inset-inline-start: 50%;
     bottom: 0;
     width: max(100%, var(--width-section-wave));
-    height: var(--height-tide-edge);
+    height: var(--tide-edge-height);
     transform: translateX(-50%);
   }
   .tide-band {
@@ -307,9 +313,11 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
 
 <script>
   import {
+    createTideVariation,
     tideFoamPaths,
     tideTimeMilliseconds,
     tideWavePaths,
+    type TideVariation,
   } from "../../utils/tide-wave";
 
   class TideGreeting extends HTMLElement {
@@ -322,6 +330,7 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
     private paused = false;
     private active = false;
     private arriving = false;
+    private variation?: TideVariation;
     private current = 0;
     private next = 0;
     private interval = 0;
@@ -416,7 +425,6 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
         !this.paused &&
         !this.preference.matches &&
         document.visibilityState === "visible" &&
-        window.scrollY < 1 &&
         !this.elements?.header.contains(document.activeElement) &&
         document.getSelection()?.isCollapsed !== false
       );
@@ -442,18 +450,31 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
 
     private syncHeader() {
       if (!this.elements) return;
-      const { bands, sheets, headerLinks } = this.elements;
+      const { bands, sheets, layers, headerLinks } = this.elements;
       const darkWater = bands.slice(-2).map((band, index) => {
         const matrix = band.getScreenCTM();
-        if (!matrix) {
+        const edge = band.ownerSVGElement;
+        if (!matrix || !edge) {
           throw new Error(
             "The homepage tide requires visible SVG water layers.",
           );
         }
+        const layer = layers[bands.length - 2 + index];
+        const sheet = sheets[bands.length - 2 + index];
+        const scaleX = edge.viewBox.baseVal.width / edge.clientWidth;
+        const scaleY = edge.viewBox.baseVal.height / edge.clientHeight;
         return {
           band,
           inverse: matrix.inverse(),
-          solid: sheets[bands.length - 2 + index].getBoundingClientRect(),
+          // Test both the solid sheet and curved edge in their shared SVG space.
+          solid: new DOMRect(
+            (sheet.offsetLeft - (layer.clientWidth - edge.clientWidth) / 2) *
+              scaleX,
+            (sheet.offsetTop - (layer.clientHeight - edge.clientHeight)) *
+              scaleY,
+            sheet.offsetWidth * scaleX,
+            sheet.offsetHeight * scaleY,
+          ),
         };
       });
       headerLinks.forEach((link) => {
@@ -464,14 +485,16 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
           bounds.left + bounds.width / 2,
           bounds.right,
         ].every((x) =>
-          darkWater.some(
-            ({ band, inverse, solid }) =>
-              (x >= solid.left &&
-                x <= solid.right &&
-                y >= solid.top &&
-                y <= solid.bottom) ||
-              band.isPointInFill(new DOMPoint(x, y).matrixTransform(inverse)),
-          ),
+          darkWater.some(({ band, inverse, solid }) => {
+            const point = new DOMPoint(x, y).matrixTransform(inverse);
+            return (
+              (point.x >= solid.left &&
+                point.x <= solid.right &&
+                point.y >= solid.top &&
+                point.y <= solid.bottom) ||
+              band.isPointInFill(point)
+            );
+          }),
         );
         link.toggleAttribute("data-tide-washed", washed);
       });
@@ -479,12 +502,12 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
 
     private undulate = (time: number) => {
       if (!this.active || !this.elements) return;
-      const paths = tideWavePaths(time / 1000);
+      const paths = tideWavePaths(time / 1000, this.variation);
       this.elements.bands.forEach((band, index) => {
         band.setAttribute("d", paths[index]);
       });
       if (this.arriving) {
-        const foam = tideFoamPaths(time / 1000);
+        const foam = tideFoamPaths(time / 1000, this.variation);
         this.elements.foam.forEach((patch, index) => {
           patch.setAttribute("d", foam[index]);
         });
@@ -501,26 +524,43 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
         water,
         layers,
         boundary,
+        header,
+        heading,
+        shore,
         shells,
         spindrift,
         foam,
       } = this.elements;
-      const height = boundary.getBoundingClientRect().top + window.scrollY;
-      if (height <= 0) {
+      const height =
+        boundary.getBoundingClientRect().top +
+        window.scrollY +
+        Number.parseFloat(getComputedStyle(boundary).paddingTop) * 0.75;
+      const coveredBottom =
+        Math.max(
+          header.getBoundingClientRect().bottom,
+          heading.getBoundingClientRect().bottom,
+          shore.getBoundingClientRect().bottom,
+        ) + window.scrollY;
+      const clearance = height - coveredBottom;
+      if (height <= 0 || clearance <= 0) {
         throw new Error(
-          "The homepage tide requires a visible Selected work boundary.",
+          "The homepage tide requires Selected work to follow the header and shell shore.",
         );
       }
       overlay.style.setProperty("--tide-height", `${height}px`);
+      overlay.style.setProperty("--tide-edge-clearance", `${clearance}px`);
       overlay.hidden = false;
+      this.variation = createTideVariation();
+      const withdrawn = "translateY(-110%)";
+      const covered = "translateY(0)";
       this.elements.header.setAttribute("data-tide-active", "");
       this.active = true;
       this.arriving = true;
       this.undulate(performance.now());
       this.next = (this.current + 1) % greetings.length;
       const arrival = [
-        { transform: "translateY(-110%)", easing: this.arrivalEasing },
-        { transform: "translateY(0)" },
+        { transform: withdrawn, easing: this.arrivalEasing },
+        { transform: covered },
       ];
       const arrivalTiming: KeyframeAnimationOptions = {
         duration: this.duration * 0.2 + this.turnDuration,
@@ -537,7 +577,7 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
             [
               { transform: "translateY(0)", opacity: 1 },
               {
-                transform: "translateY(-110%)",
+                transform: withdrawn,
                 opacity: index < 3 ? 0 : 1,
               },
             ],
@@ -609,7 +649,8 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
     };
 
     private handleKeydown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") this.paused = true;
+      if (event.key !== "Escape") return;
+      this.paused = true;
       this.refresh();
     };
 
@@ -640,7 +681,9 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
       );
       const spindrift = this.querySelector<HTMLDivElement>(".tide-spindrift");
       const foam = Array.from(
-        this.querySelectorAll<SVGPathElement>(".tide-foam-patch"),
+        this.querySelectorAll<SVGPathElement>(
+          ".tide-spindrift .tide-foam-patch",
+        ),
       );
       const boundary = document.getElementById("selected-work");
       const header = document.querySelector<HTMLElement>(".site-header");
@@ -709,21 +752,20 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
         );
       }
       document.addEventListener("keydown", this.handleKeydown);
+      header.addEventListener("pointerdown", this.refresh);
       this.preference.addEventListener("change", this.refresh);
-      window.addEventListener("scroll", this.refresh, { passive: true });
       window.addEventListener("resize", this.handleResize);
       for (const event of [
         "visibilitychange",
         "focusin",
         "focusout",
-        "pointerdown",
         "selectionchange",
       ]) {
         document.addEventListener(event, this.refresh);
       }
       this.observer = new IntersectionObserver(([entry]) => {
         this.visible = entry.isIntersecting;
-        this.refresh();
+        this.schedule();
       });
       this.observer.observe(this);
       this.scatterShells();
@@ -735,14 +777,13 @@ const shells = ["scallop", "whelk", "spiral", "clam", "cockle"] as const;
       this.complete();
       this.observer?.disconnect();
       document.removeEventListener("keydown", this.handleKeydown);
+      this.elements?.header.removeEventListener("pointerdown", this.refresh);
       this.preference.removeEventListener("change", this.refresh);
-      window.removeEventListener("scroll", this.refresh);
       window.removeEventListener("resize", this.handleResize);
       for (const event of [
         "visibilitychange",
         "focusin",
         "focusout",
-        "pointerdown",
         "selectionchange",
       ]) {
         document.removeEventListener(event, this.refresh);

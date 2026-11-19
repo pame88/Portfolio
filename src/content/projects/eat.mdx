@@ -20,6 +20,7 @@ order: 3
 ---
 
 import Section from "../../components/layout/Section.astro";
+import SectionHeading from "../../components/typography/SectionHeading.astro";
 import ImageCarousel from "../../components/media/ImageCarousel.astro";
 import VideoPlayer from "../../components/media/VideoPlayer.astro";
 import conceptVideo from "../../assets/eat!/Eat_FinalVideo_Compressed.mp4?url";
@@ -28,7 +29,12 @@ import { eatPresentationSlides } from "../eat-presentation";
 
 <Section>
 
-## Concept video
+<SectionHeading
+  slot="heading"
+  id="concept-video"
+  title="Concept video"
+  label="01 / Concept"
+/>
 
 <VideoPlayer
   src={conceptVideo}
@@ -41,7 +47,12 @@ import { eatPresentationSlides } from "../eat-presentation";
 
 <Section>
 
-## Presentation
+<SectionHeading
+  slot="heading"
+  id="presentation"
+  title="Presentation"
+  label="02 / Presentation"
+/>
 
 Browse the slides using the arrows or swipe. With the slides focused, use
 the arrow keys to navigate, Home for the first slide, or End for the last.

@@ -5,7 +5,7 @@ Pages compose these building blocks rather than duplicating their styles.
 
 | Component       | API and intended use                                                                                                        |
 | --------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| SiteHeader      | Quiet sans-serif primary navigation, current-page underline, responsive wrapping without a JS menu                          |
+| SiteHeader      | Quiet sans-serif primary navigation, semantic current-page state, responsive wrapping without a JS menu                     |
 | SiteFooter      | Shared dune-grass footer; honest placeholder status, no invented contact links                                              |
 | PageContainer   | `width`: content (default, full width with shared side padding), full (unpadded)                                            |
 | Section         | `width` plus optional `id`; container and predictable vertical spacing                                                      |
@@ -55,6 +55,8 @@ ProjectLayout wraps its introduction in `project-intro`. At tablet widths and
 above, shared styles reduce introduction spacing and center hero images with
 the viewport-relative `--height-project-hero` cap. Mobile sizing and body media
 are unchanged; source dimensions and uncropped image proportions are retained.
+Project content follows the introduction without a divider line. Other shared
+rules and subsection borders remain unchanged.
 
 ## SectionHeading
 
@@ -79,13 +81,17 @@ the requested blue pairing instead of the earlier multicolor panels.
 Subsections retain their neutral rule and dark-beige text on off-white.
 Labels communicate reading order, not outcomes. Dragon Admin Center keeps
 all chapter/subsection anchors, ordering, and semantic heading levels.
+Listening Parties, eat!, and ReXplore use the same full-width chapter component
+for their walkthrough, concept video, presentation, and research process headings,
+preserving their former Markdown anchors.
 
 ## Navigation
 
 SiteHeader links to Other and About; the Eamonn Burke brand links home.
 The document title suffix also uses Eamonn Burke. No link or project-card
-text is underlined on hover; keyboard focus rings remain visible, and the
-current-page navigation underline remains at rest.
+text is underlined on hover; keyboard focus rings remain visible. Navigation
+links are never underlined, including the current page; `aria-current` retains
+the accessible selected-page state.
 The Other listing retains `/creative/` and the internal `creative` category,
 but page titles, navigation, and project category labels display Other.
 UX/product projects remain directly accessible from the home selection
@@ -163,16 +169,36 @@ start-to-start cadence. During each 3800ms cycle a nine-band wave arrives,
 the greeting changes only while covered at the turnaround, and the water
 immediately retreats as the shells
 settle in a staggered sequence. The absolutely positioned, clipped overlay measures the existing
-`selected-work` boundary and cannot paint over project content. The homepage
+`selected-work` boundary and three quarters of its top padding; the remaining
+quarter is a dry gap above the heading. The homepage caps the decorative edge height to 2.1 times
+the remaining space below the header, reserved greeting, and entire shell shore.
+Measuring the shore rather than only currently visible shells covers every
+possible scatter, including the replacement arrangement. At full reach the leading
+contour's 481-899-unit range within the 900-unit drawing covers that whole area
+while the entire curved edge stays above the overlay boundary. Arrival stops at
+zero translation rather than overshooting into the clip.
+Each solid water sheet extends upward by one edge height, keeping it connected
+to the top of the clipped overlay throughout travel.
+The homepage
 requires the shared `site-header` for focus protection. Timing comes from
 timing tokens; `tideTimeMilliseconds` accepts both `ms` and `s` because production
 CSS optimization can change units. The component owns presentation and lifecycle handling.
 The pure `tideWavePaths` helper supplies the original layered contours.
+Every wash travels straight down and immediately back up, without corner sweeps
+or shear. `createTideVariation` samples phase, amplitude (80-175 drawing units),
+wavelength (1600-2400 units), and off-center position once per wash, ranging from
+rounded arcs to pronounced deep curves. Both water and foam share those
+parameters. Faster opposing currents ripple the edge throughout arrival;
+deeper bands soften the broad bend to stay within the drawing.
+Randomness is sampled once per cycle, never per frame. No reference photograph
+is embedded or published.
 It combines a breathing swell with opposing currents and independent internal
 bands, then uses analytic slopes for continuously smooth cubic paths. Internal
-bands can cross, but remain behind the leading edge. A taller 720-unit drawing
-and 256px-512px responsive edge spread the bands more widely than the earlier
-six-layer treatment. Each band has a separately
+bands can cross, but remain behind the leading edge. A taller 900-unit drawing
+with 64-unit nominal band spacing, stronger 26/14-unit internal currents, and
+faster opposing phase rates makes each layer bend more independently.
+The 256px-512px responsive edge and larger measured-height allowance widen the
+rendered bands rather than just increasing drawing coordinates. Each band has a separately
 animated wrapper containing its SVG edge and matching solid water, preserving
 the seam-free overlap. `--duration-tide-turn` extends arrival by 400ms so the
 water keeps advancing slowly as it approaches its furthest reach. Arrival uses
@@ -188,19 +214,25 @@ water and foam a gentler acceleration and deceleration than UI transitions.
 The darkest layer retreats in 1428ms;
 durations increase toward the shallow edge, whose 2720ms retreat completes the
 cycle. The three lightest layers fade throughout their slower withdrawal.
-`tideFoamPaths` builds irregular, tapered ribbons along that same leading edge.
+`tideFoamPaths` builds irregular, tapered ribbons along that same leading edge,
+with 11-41 drawing-unit midpoint thickness for a more visible foam line.
 Their separate layer follows arrival, then freezes its contours at maximum reach:
 patches drift only backward and fade at staggered rates as the water pulls away.
 An active-only requestAnimationFrame loop updates those contours rather than
 sliding fixed shapes; foam geometry updates only during arrival.
+Only one six-patch foam trail remains at the turnaround edge. No additional
+rows are deposited during withdrawal; its drift and fade share the normal
+cancellation lifecycle.
 The illustration's nine `--art-tide-*` colors span deep blue to pure white and are a
 documented art-only exception; temporary white header ink uses the separate
 `--color-on-tide` role.
 
 Reduced motion and no-JavaScript rendering preserve static text and artwork.
 Escape stops waves for the rest of the visit, with a screen-reader instruction
-and no visible control. Document visibility, introduction visibility, scroll position,
-header keyboard focus, and text selection gate scheduling. Interactions and resizing
+and no visible control. Document visibility, introduction visibility,
+header keyboard focus, and text selection gate scheduling. Scrolling does not
+interrupt an active wash; leaving the viewport only suspends future cycles.
+Header pointer activation, Escape, focus/selection changes, and resizing
 finish the current animation; subsequent cycles wait a fresh five seconds.
 Listeners, observers, timers, animation frames, and animations are cleaned up on disconnection.
 The existing header is raised above the decorative overlay only during a wash.
@@ -215,9 +247,11 @@ Greeting changes are not live announcements. See the motion exception in
 Decorative original SVG line drawings accepting a typed `variant`: `scallop`,
 `whelk`, `spiral`, `clam`, or `cockle`. Bold outlines and lighter hatching evoke
 the owner's embroidery reference without copying or embedding that source image.
-Drawings inherit existing semantic inks and have no solid fills. TideGreeting
-owns randomized placement and rotation, varied responsive sizes and existing
-purple, sand, ocean, and grass inks, and staggered settling motion.
+Drawings inherit their ink and have no solid fills. TideGreeting owns randomized
+placement and rotation, varied responsive sizes, and staggered settling motion.
+Shells use art-only pastel pink, rose, lilac, lavender, and light-sand inks.
+No shell uses red, blue, or green. These illustration colors do not add interface
+color roles.
 One to five shells are scattered across the reserved shore at every viewport size;
 the count changes with each wash. Without JavaScript, all five retain safe static
 positions. SVGs are hidden from assistive
